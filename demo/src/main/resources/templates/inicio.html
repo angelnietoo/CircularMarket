@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+    <link rel="stylesheet" th:href="@{/css/Inicio.css}">
+</head>
+<body>
+
+<div class="page-wrapper">
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-main">Circular</span><span class="brand-accent">Market</span>
+        </div>
+
+        <form class="search-bar" th:action="@{/buscar}" method="get">
+            <input type="text" name="q" placeholder="Buscar productos..." class="search-input">
+            <button type="submit" class="search-button">Buscar</button>
+        </form>
+
+        <div class="top-links">
+            <a th:href="@{/login}">Cuenta</a>
+            <a th:href="@{/pedidos}">Pedidos</a>
+            <a th:href="@{/carrito}">Carrito</a>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <a th:href="@{/categoria/electronica}">Electrónica</a>
+        <a th:href="@{/categoria/moda}">Moda</a>
+        <a th:href="@{/categoria/hogar}">Hogar</a>
+        <a th:href="@{/categoria/gaming}">Gaming</a>
+        <a th:href="@{/ofertas}">Ofertas</a>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <p class="hero-kicker">Bienvenido a Circular Market</p>
+            <h1>Todo lo que necesitas, en un solo lugar</h1>
+            <p class="hero-text">
+                Descubre productos destacados, ofertas y novedades con un diseño limpio, moderno y fácil de usar.
+            </p>
+            <a th:href="@{/ofertas}" class="hero-button">Ver ofertas</a>
+        </div>
+    </section>
+
+    <main class="content">
+        <section class="section-header">
+            <h2>Productos destacados</h2>
+            <a th:href="@{/productos}" class="view-all">Ver todos</a>
+        </section>
+
+        <section class="product-grid">
+            <article class="product-card" th:each="producto : ${productos}">
+                <div class="product-image">
+                    <img th:src="@{${producto.imagen}}" alt="Imagen del producto">
+                </div>
+
+                <div class="product-info">
+                    <h3 th:text="${producto.nombre}">Nombre del producto</h3>
+                    <p class="product-description" th:text="${producto.descripcion}">
+                        Descripción del producto
+                    </p>
+
+                    <div class="product-footer">
+                        <span class="product-price" th:text="${producto.precio} + ' €'">99,99 €</span>
+                        <a th:href="@{/producto/{id}(id=${producto.id})}" class="product-button">
+                            Ver producto
+                        </a>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </main>
+</div>
+
+</body>
+</html>
