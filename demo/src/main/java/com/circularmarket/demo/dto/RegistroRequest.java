@@ -5,6 +5,7 @@ public class RegistroRequest {
     private String nombre;
     private String apellidos;
     private String email;
+    private String telefono;
     private String password;
     private String repetirPassword;
 
@@ -33,6 +34,14 @@ public class RegistroRequest {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 
     public String getPassword() {

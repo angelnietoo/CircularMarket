@@ -4,68 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
-    <link rel="stylesheet" th:href="@{/css/Inicio.css}">
+    <link rel="stylesheet" th:href="@{/css/inicio.css}">
 </head>
+
 <body>
 
-<div class="page-wrapper">
-    <header class="topbar">
-        <div class="brand">
-            <span class="brand-main">Circular</span><span class="brand-accent">Market</span>
-        </div>
+<!-- HEADER -->
+<div th:replace="fragments/header :: header"></div>
 
-        <form class="search-bar" th:action="@{/buscar}" method="get">
-            <input type="text" name="q" placeholder="Buscar productos..." class="search-input">
-            <button type="submit" class="search-button">Buscar</button>
-        </form>
+<div class="inicio-page-wrapper">
 
-        <div class="top-links">
-            <a th:href="@{/login}">Cuenta</a>
-            <a th:href="@{/pedidos}">Pedidos</a>
-            <a th:href="@{/carrito}">Carrito</a>
-        </div>
-    </header>
-
-    <nav class="navbar">
-        <a th:href="@{/categoria/electronica}">Electrónica</a>
-        <a th:href="@{/categoria/moda}">Moda</a>
-        <a th:href="@{/categoria/hogar}">Hogar</a>
-        <a th:href="@{/categoria/gaming}">Gaming</a>
-        <a th:href="@{/ofertas}">Ofertas</a>
-    </nav>
-
-    <section class="hero">
-        <div class="hero-content">
-            <p class="hero-kicker">Bienvenido a Circular Market</p>
-            <h1>Todo lo que necesitas, en un solo lugar</h1>
-            <p class="hero-text">
+    <section class="inicio-hero">
+        <div class="inicio-hero-content">
+            <p class="inicio-hero-kicker">Bienvenido a Circular Market</p>
+            <h1 class="inicio-hero-title">Todo lo que necesitas, en un solo lugar</h1>
+            <p class="inicio-hero-text">
                 Descubre productos destacados, ofertas y novedades con un diseño limpio, moderno y fácil de usar.
             </p>
-            <a th:href="@{/ofertas}" class="hero-button">Ver ofertas</a>
+            <a th:href="@{/ofertas}" class="inicio-hero-button">Ver ofertas</a>
         </div>
     </section>
 
-    <main class="content">
-        <section class="section-header">
+    <main class="inicio-content">
+        <section class="inicio-section-header">
             <h2>Productos destacados</h2>
-            <a th:href="@{/productos}" class="view-all">Ver todos</a>
+            <a th:href="@{/productos}" class="inicio-view-all">Ver todos</a>
         </section>
 
-        <section class="product-grid">
-            <article class="product-card" th:each="producto : ${productos}">
-                <div class="product-image">
+        <section class="inicio-product-grid">
+            <article class="inicio-product-card" th:each="producto : ${productos}">
+                <div class="inicio-product-image">
                     <img th:src="@{${producto.imagen}}" alt="Imagen del producto">
                 </div>
 
-                <div class="product-info">
+                <div class="inicio-product-info">
                     <h3 th:text="${producto.nombre}">Nombre del producto</h3>
-                    <p class="product-description" th:text="${producto.descripcion}">
+
+                    <p class="inicio-product-description" th:text="${producto.descripcion}">
                         Descripción del producto
                     </p>
 
-                    <div class="product-footer">
-                        <span class="product-price" th:text="${producto.precio} + ' €'">99,99 €</span>
-                        <a th:href="@{/producto/{id}(id=${producto.id})}" class="product-button">
+                    <div class="inicio-product-footer">
+                        <span class="inicio-product-price" th:text="${producto.precio} + ' €'">
+                            99,99 €
+                        </span>
+
+                        <a th:href="@{/producto/{id}(id=${producto.id})}" class="inicio-product-button">
                             Ver producto
                         </a>
                     </div>
@@ -73,7 +57,9 @@
             </article>
         </section>
     </main>
+
 </div>
 
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

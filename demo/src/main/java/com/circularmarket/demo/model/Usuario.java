@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "usuario")
+@Table(name = "usuarios")
 public class Usuario {
 
     @Id
@@ -12,26 +12,37 @@ public class Usuario {
     @Column(name = "USid")
     private Long id;
 
+    // ===== IDENTIDAD =====
     @Column(name = "USnombre", nullable = false, length = 100)
     private String nombre;
 
     @Column(name = "USapellidos", nullable = false, length = 150)
     private String apellidos;
 
-    @Column(name = "USemail", nullable = false, unique = true, length = 150)
+    // ===== CREDENCIALES =====
+    @Column(name = "UScorreo", nullable = false, unique = true, length = 255)
     private String email;
 
-    @Column(name = "USclave", nullable = false, length = 255)
-    private String clave;
+    @Column(name = "UScontrasena", nullable = false, length = 255)
+    private String contrasena;
 
-    @Column(name = "USfecharegistro", nullable = false)
-    private LocalDateTime fechaRegistro;
-
-    @Column(name = "USrol", nullable = false, length = 50)
+    @Column(name = "USrol", nullable = false)
     private String rol;
 
-    public Usuario() {
-    }
+    // ===== CONTACTO =====
+    @Column(name = "UStelefono", length = 30)
+    private String telefono;
+
+    // ===== AUDITORÍA =====
+    @Column(name = "UScreadoen", insertable = false, updatable = false)
+    private LocalDateTime creadoEn;
+
+    @Column(name = "USactualizadoen", insertable = false, updatable = false)
+    private LocalDateTime actualizadoEn;
+
+    public Usuario() {}
+
+    // GETTERS Y SETTERS
 
     public Long getId() {
         return id;
@@ -61,20 +72,12 @@ public class Usuario {
         this.email = email;
     }
 
-    public String getClave() {
-        return clave;
+    public String getContrasena() {
+        return contrasena;
     }
 
-    public void setClave(String clave) {
-        this.clave = clave;
-    }
-
-    public LocalDateTime getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    public void setFechaRegistro(LocalDateTime fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
     public String getRol() {
@@ -83,5 +86,21 @@ public class Usuario {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public LocalDateTime getCreadoEn() {
+        return creadoEn;
+    }
+
+    public LocalDateTime getActualizadoEn() {
+        return actualizadoEn;
     }
 }

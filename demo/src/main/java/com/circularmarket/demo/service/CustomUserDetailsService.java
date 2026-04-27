@@ -24,12 +24,20 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
         Usuario usuario = usuarioRepository.findByEmail(email.trim().toLowerCase())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-        String rol = usuario.getRol() == null ? "ALUMNO" : usuario.getRol().toUpperCase(Locale.ROOT);
+        String rol = usuario.getRol() == null
+                ? "COMPRADOR"
+                : usuario.getRol().toUpperCase(Locale.ROOT);
+
         GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + rol);
 
-        return new User(usuario.getEmail(), usuario.getClave(), List.of(authority));
+        return new User(
+                usuario.getEmail(),
+                usuario.getContrasena(),
+                List.of(authority)
+        );
     }
 }

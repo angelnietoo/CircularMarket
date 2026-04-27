@@ -6,8 +6,6 @@ import com.circularmarket.demo.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 public class UsuarioService {
 
@@ -20,17 +18,27 @@ public class UsuarioService {
     }
 
     public Usuario registrar(RegistroRequest request) {
-        if (usuarioRepository.existsByEmail(request.getEmail())) {
+        String email = request.getEmail().trim().toLowerCase();
+
+        if (usuarioRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("El usuario ya existe.");
         }
 
         Usuario usuario = new Usuario();
-        usuario.setNombre(request.getNombre().trim());
-        usuario.setApellidos(request.getApellidos().trim());
-        usuario.setEmail(request.getEmail().trim().toLowerCase());
-        usuario.setClave(passwordEncoder.encode(request.getPassword()));
-        usuario.setFechaRegistro(LocalDateTime.now());
-        usuario.setRol("ALUMNO");
+
+        // ===== IDENTIDAD =====
+        usuario.setNombre(request.getNombre());
+        usuario.setApellidos(request.getApellidos());
+
+        // ===== CREDENCIALES =====
+        usuario.setEmail(email);
+        usuario.setContrasena(passwordEncoder.encode(request.getPassword()));
+
+        // ===== ROL POR DEFECTO =====
+        usuario.setRol("user");
+
+        // ===== CONTACTO =====
+        usuario.setTelefono(request.getTelefono());
 
         return usuarioRepository.save(usuario);
     }

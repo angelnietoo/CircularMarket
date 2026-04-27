@@ -33,64 +33,53 @@ public class AuthController {
 
     @PostMapping("/registro")
     public String registrar(@ModelAttribute RegistroRequest registroRequest, Model model) {
-        String nombre = registroRequest.getNombre() != null ? registroRequest.getNombre().trim() : "";
-        String apellidos = registroRequest.getApellidos() != null ? registroRequest.getApellidos().trim() : "";
-        String email = registroRequest.getEmail() != null ? registroRequest.getEmail().trim() : "";
-        String password = registroRequest.getPassword() != null ? registroRequest.getPassword().trim() : "";
-        String repetirPassword = registroRequest.getRepetirPassword() != null ? registroRequest.getRepetirPassword().trim() : "";
 
-        if (nombre.isEmpty()) {
+        // ===== VALIDACIÓN BÁSICA =====
+        if (registroRequest.getNombre() == null || registroRequest.getNombre().trim().isEmpty()) {
             model.addAttribute("error", "Debes introducir el nombre.");
-            model.addAttribute("registroRequest", registroRequest);
             return "registro";
         }
 
-        if (apellidos.isEmpty()) {
+        if (registroRequest.getApellidos() == null || registroRequest.getApellidos().trim().isEmpty()) {
             model.addAttribute("error", "Debes introducir los apellidos.");
-            model.addAttribute("registroRequest", registroRequest);
             return "registro";
         }
 
-        if (email.isEmpty()) {
+        if (registroRequest.getEmail() == null || registroRequest.getEmail().trim().isEmpty()) {
             model.addAttribute("error", "Debes introducir el email.");
-            model.addAttribute("registroRequest", registroRequest);
             return "registro";
         }
 
-        if (password.isEmpty()) {
+        if (registroRequest.getPassword() == null || registroRequest.getPassword().isEmpty()) {
             model.addAttribute("error", "Debes introducir la contraseña.");
-            model.addAttribute("registroRequest", registroRequest);
             return "registro";
         }
 
-        if (repetirPassword.isEmpty()) {
+        if (registroRequest.getRepetirPassword() == null || registroRequest.getRepetirPassword().isEmpty()) {
             model.addAttribute("error", "Debes repetir la contraseña.");
-            model.addAttribute("registroRequest", registroRequest);
             return "registro";
         }
 
-        if (!password.equals(repetirPassword)) {
+        if (!registroRequest.getPassword().equals(registroRequest.getRepetirPassword())) {
             model.addAttribute("error", "Las contraseñas no coinciden.");
-            model.addAttribute("registroRequest", registroRequest);
             return "registro";
         }
 
-        if (password.length() < 6) {
+        if (registroRequest.getPassword().length() < 6) {
             model.addAttribute("error", "La contraseña debe tener al menos 6 caracteres.");
-            model.addAttribute("registroRequest", registroRequest);
             return "registro";
         }
 
         try {
             usuarioService.registrar(registroRequest);
             return "redirect:/login?registrado=1";
+
         } catch (IllegalArgumentException ex) {
             model.addAttribute("error", ex.getMessage());
-            model.addAttribute("registroRequest", registroRequest);
             return "registro";
+
         } catch (Exception ex) {
-            model.addAttribute("error", "Se ha producido un error al registrar al usuario.");
-            model.addAttribute("registroRequest", registroRequest);
+            model.addAttribute("error", "Error al registrar el usuario.");
             return "registro";
         }
     }

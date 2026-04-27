@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito | CircularMarket</title>
+    <link rel="stylesheet" th:href="@{/css/carrito.css}">
+</head>
+<body>
+
+<header class="header">
+    <div class="header-content">
+        <a th:href="@{/inicio}" class="logo">CircularMarket</a>
+        <nav class="nav">
+            <a th:href="@{/inicio}">Inicio</a>
+            <a th:href="@{/productos}">Productos</a>
+            <a th:href="@{/carrito}" class="active">Carrito</a>
+        </nav>
+    </div>
+</header>
+
+<main class="carrito-page">
+    <section class="carrito-container">
+        <div class="carrito-titulo">
+            <h1>Tu carrito</h1>
+            <p th:text="${carritoItems != null ? carritoItems.size() : 0} + ' producto(s) en tu carrito'">
+                0 producto(s) en tu carrito
+            </p>
+        </div>
+
+        <div class="carrito-layout" th:if="${carritoItems != null and !carritoItems.isEmpty()}">
+            <div class="carrito-items">
+
+                <article class="carrito-item" th:each="item : ${carritoItems}">
+                    <div class="item-imagen">
+                        <img th:src="${item.imagenUrl}" alt="Producto">
+                    </div>
+
+                    <div class="item-info">
+                        <h2 th:text="${item.nombre}">Nombre del producto</h2>
+                        <p class="item-descripcion" th:text="${item.descripcion}">
+                            Descripción del producto
+                        </p>
+
+                        <div class="item-meta">
+                            <span class="item-precio" th:text="${item.precio} + ' €'">0,00 €</span>
+                            <span class="item-stock" th:text="'Stock: ' + ${item.stock}">Stock: 0</span>
+                        </div>
+                    </div>
+
+                    <div class="item-cantidad">
+                        <label>Cantidad</label>
+                        <div class="cantidad-control">
+                            <form th:action="@{/carrito/disminuir/{id}(id=${item.id})}" method="post">
+                                <button type="submit" class="btn-cantidad">−</button>
+                            </form>
+
+                            <input type="text" readonly th:value="${item.cantidad}" class="cantidad-input">
+
+                            <form th:action="@{/carrito/aumentar/{id}(id=${item.id})}" method="post">
+                                <button type="submit" class="btn-cantidad">+</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="item-total">
+                        <span>Total</span>
+                        <strong th:text="${item.total} + ' €'">0,00 €</strong>
+                    </div>
+
+                    <div class="item-acciones">
+                        <form th:action="@{/carrito/eliminar/{id}(id=${item.id})}" method="post">
+                            <button type="submit" class="btn-eliminar">Eliminar</button>
+                        </form>
+                    </div>
+                </article>
+
+            </div>
+
+            <aside class="resumen-carrito">
+                <h2>Resumen del pedido</h2>
+
+                <div class="resumen-linea">
+                    <span>Subtotal</span>
+                    <strong th:text="${subtotal != null ? subtotal : 0} + ' €'">0,00 €</strong>
+                </div>
+
+                <div class="resumen-linea">
+                    <span>Gastos de envío</span>
+                    <strong th:text="${envio != null ? envio : 0} + ' €'">0,00 €</strong>
+                </div>
+
+                <div class="resumen-linea total">
+                    <span>Total</span>
+                    <strong th:text="${total != null ? total : 0} + ' €'">0,00 €</strong>
+                </div>
+
+                <a th:href="@{/checkout}" class="btn-finalizar">Finalizar compra</a>
+                <a th:href="@{/productos}" class="btn-seguir">Seguir comprando</a>
+            </aside>
+        </div>
+
+        <div class="carrito-vacio" th:if="${carritoItems == null or carritoItems.isEmpty()}">
+            <h2>Tu carrito está vacío</h2>
+            <p>Añade productos para continuar con tu compra.</p>
+            <a th:href="@{/productos}" class="btn-volver">Ver productos</a>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <p>&copy; 2026 CircularMarket. Todos los derechos reservados.</p>
+</footer>
+</body>
+</html>

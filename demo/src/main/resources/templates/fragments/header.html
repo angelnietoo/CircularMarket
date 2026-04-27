@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header th:fragment="header">
+
+    <div class="inicio-topbar">
+
+        <div class="inicio-brand">
+            <span class="inicio-brand-main">Circular</span><span class="inicio-brand-accent">Market</span>
+        </div>
+
+        <form class="inicio-search-bar" th:action="@{/buscar}" method="get">
+            <input
+                type="text"
+                name="q"
+                placeholder="Buscar productos..."
+                class="inicio-search-input">
+
+            <button type="submit" class="inicio-search-button">
+                Buscar
+            </button>
+        </form>
+
+        <div class="inicio-top-links">
+
+            <a th:href="@{/carrito}">Carrito</a>
+
+            <a th:href="@{/pedidos}">Pedidos</a>
+
+            <div class="inicio-account-dropdown">
+
+                <button
+                    type="button"
+                    class="inicio-account-button"
+                    onclick="toggleCuentaMenu()">
+                    Cuenta ▾
+                </button>
+
+                <div id="inicioCuentaMenu" class="inicio-account-menu">
+                    <a th:href="@{/configuracion}">Configuración</a>
+                    <a th:href="@{/pedidos}">Mis pedidos</a>
+                    <a th:href="@{/logout}">Cerrar sesión</a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <nav class="inicio-navbar">
+        <a th:href="@{/categoria/electronica}">Electrónica</a>
+        <a th:href="@{/categoria/moda}">Moda</a>
+        <a th:href="@{/categoria/hogar}">Hogar</a>
+        <a th:href="@{/categoria/gaming}">Gaming</a>
+        <a th:href="@{/ofertas}">Ofertas</a>
+    </nav>
+
+</header>
+
+<script>
+function toggleCuentaMenu() {
+    const menu = document.getElementById("inicioCuentaMenu");
+    menu.classList.toggle("inicio-show-menu");
+}
+
+document.addEventListener("click", function(e) {
+    const dropdown = document.querySelector(".inicio-account-dropdown");
+    const menu = document.getElementById("inicioCuentaMenu");
+
+    if (!dropdown.contains(e.target)) {
+        menu.classList.remove("inicio-show-menu");
+    }
+});
+</script>
+
+</body>
+</html>

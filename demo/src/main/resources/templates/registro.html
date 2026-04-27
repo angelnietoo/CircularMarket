@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
-    <link rel="stylesheet" th:href="@{/css/Registro.css}">
+    <link rel="stylesheet" th:href="@{/css/registro.css}">
 </head>
 <body>
     <div class="auth-wrapper">
@@ -15,6 +15,7 @@
             <div class="message" th:if="${error}" th:text="${error}"></div>
 
             <form th:action="@{/registro}" method="post" th:object="${registroRequest}">
+
                 <div class="field">
                     <label for="nombre">Nombre</label>
                     <input type="text" id="nombre" th:field="*{nombre}" class="input" placeholder="Introduce tu nombre" required>
@@ -28,6 +29,12 @@
                 <div class="field">
                     <label for="email">Email</label>
                     <input type="email" id="email" th:field="*{email}" class="input" placeholder="Introduce tu email" required>
+                </div>
+
+                <!-- ✅ NUEVO CAMPO TELÉFONO -->
+                <div class="field">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" th:field="*{telefono}" class="input" placeholder="Introduce tu teléfono">
                 </div>
 
                 <div class="field">

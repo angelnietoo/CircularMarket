@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración de cuenta</title>
+
+    <link rel="stylesheet" th:href="@{/css/config.css}">
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div class="config-page-wrapper">
+
+    <main class="config-content">
+
+        <section class="config-card">
+
+            <h1 class="config-title">Configuración de cuenta</h1>
+
+            <p class="config-subtitle">
+                Modifica tus datos personales y guarda los cambios.
+            </p>
+
+            <div class="config-message config-success" th:if="${success}">
+                Datos actualizados correctamente.
+            </div>
+
+            <div class="config-message config-error" th:if="${error}" th:text="${error}">
+                Ha ocurrido un error.
+            </div>
+
+            <form th:action="@{/configuracion}" method="post" th:object="${usuario}">
+
+                <div class="config-grid">
+
+                    <div class="config-field">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" th:field="*{nombre}" class="config-input" required>
+                    </div>
+
+                    <div class="config-field">
+                        <label for="apellidos">Apellidos</label>
+                        <input type="text" id="apellidos" th:field="*{apellidos}" class="config-input" required>
+                    </div>
+
+                    <div class="config-field">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" th:field="*{email}" class="config-input" required>
+                    </div>
+
+                    <div class="config-field">
+                        <label for="telefono">Teléfono</label>
+                        <input type="tel" id="telefono" th:field="*{telefono}" class="config-input">
+                    </div>
+
+                    <div class="config-field config-full">
+                        <label for="direccion">Dirección</label>
+                        <input type="text" id="direccion" th:field="*{direccion}" class="config-input">
+                    </div>
+
+                    <div class="config-field">
+                        <label for="password">Nueva contraseña</label>
+                        <input type="password" id="password" name="password" class="config-input">
+                    </div>
+
+                    <div class="config-field">
+                        <label for="repetirPassword">Repetir contraseña</label>
+                        <input type="password" id="repetirPassword" name="repetirPassword" class="config-input">
+                    </div>
+
+                </div>
+
+                <div class="config-actions">
+                    <button type="submit" class="config-btn-primary">
+                        Guardar cambios
+                    </button>
+
+                    <a th:href="@{/inicio}" class="config-btn-secondary">
+                        Volver
+                    </a>
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>
