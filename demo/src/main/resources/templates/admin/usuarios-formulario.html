@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title th:text="${usuario.id == null ? 'Nuevo usuario' : 'Editar usuario'} + ' | CircularMarket'">Formulario de usuario | CircularMarket</title>
+    <title th:text="${usuario == null or usuario.id == null ? 'Nuevo usuario' : 'Editar usuario'} + ' | CircularMarket'">Formulario de usuario | CircularMarket</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-50 text-slate-950 font-sans">
@@ -25,8 +25,8 @@
         <main class="flex-1 min-w-0 p-6 lg:p-8">
             <header class="mb-6 flex flex-col gap-5 rounded-[20px] border border-slate-200 bg-white/90 p-6 shadow-lg backdrop-blur sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h2 class="text-2xl font-bold text-slate-900" th:text="${usuario.id == null ? 'Nuevo usuario' : 'Editar usuario'}">Nuevo usuario</h2>
-                    <p class="mt-2 text-sm text-slate-500" th:text="${usuario.id == null ? 'Rellena los datos para crear un usuario' : 'Modifica los datos del usuario seleccionado'}">Formulario de usuario</p>
+                    <h2 class="text-2xl font-bold text-slate-900" th:text="${usuario == null or usuario.id == null ? 'Nuevo usuario' : 'Editar usuario'}">Nuevo usuario</h2>
+                    <p class="mt-2 text-sm text-slate-500" th:text="${usuario == null or usuario.id == null ? 'Rellena los datos para crear un usuario' : 'Modifica los datos del usuario seleccionado'}">Formulario de usuario</p>
                 </div>
 
                 <div class="flex">
@@ -40,9 +40,11 @@
                 </div>
 
                 <form th:object="${usuario}"
-                      th:action="${usuario.id == null ? @{/admin/usuarios} : @{/admin/usuarios/{id}(id=${usuario.id})}}"
+                      th:action="@{/admin/usuarios}"
                       method="post"
                       class="space-y-6 p-6">
+
+                    <input type="hidden" th:if="${usuario != null and usuario.id != null}" th:field="*{id}" />
 
                     <div class="grid gap-4 md:grid-cols-2">
                         <div class="space-y-2">
@@ -79,26 +81,26 @@
                             <label for="rol" class="block text-sm font-semibold text-slate-700">Rol</label>
                             <select id="rol" th:field="*{rol}" required class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
                                 <option value="">Selecciona un rol</option>
-                                <option value="user">Usuario</option>
-                                <option value="admin">Administrador</option>
+                                <option value="USER">Usuario</option>
+                                <option value="ADMIN">Administrador</option>
                             </select>
                             <small th:if="${#fields.hasErrors('rol')}" th:errors="*{rol}" class="block rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700"></small>
                         </div>
 
                         <div class="space-y-2">
-                            <label for="password" class="block text-sm font-semibold text-slate-700">Contraseña</label>
+                            <label for="contrasena" class="block text-sm font-semibold text-slate-700">Contraseña</label>
                             <input type="password"
-                                   id="password"
-                                   th:field="*{password}"
-                                   th:placeholder="${usuario.id == null ? 'Contraseña' : 'Dejar en blanco si no quieres cambiarla'}"
+                                   id="contrasena"
+                                   th:field="*{contrasena}"
+                                   th:placeholder="${usuario == null or usuario.id == null ? 'Contraseña' : 'Dejar en blanco si no quieres cambiarla'}"
                                    class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100" />
-                            <small th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="block rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700"></small>
+                            <small th:if="${#fields.hasErrors('contrasena')}" th:errors="*{contrasena}" class="block rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700"></small>
                         </div>
                     </div>
 
                     <div class="flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:justify-end">
                         <a class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100" th:href="@{/admin/usuarios}">Cancelar</a>
-                        <button type="submit" class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700" th:text="${usuario.id == null ? 'Crear usuario' : 'Guardar cambios'}">Guardar</button>
+                        <button type="submit" class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700" th:text="${usuario == null or usuario.id == null ? 'Crear usuario' : 'Guardar cambios'}">Guardar</button>
                     </div>
                 </form>
             </section>

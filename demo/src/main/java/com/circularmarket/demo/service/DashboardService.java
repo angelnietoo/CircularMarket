@@ -17,6 +17,6 @@ public class DashboardService {
     }
 
     public long totalAdmins() {
-        return usuarioRepository.countByRolIgnoreCase("ADMIN");
+        return usuarioRepository.countByRol_NombreIgnoreCase("admin");
     }
 }

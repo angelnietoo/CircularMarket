@@ -1,7 +1,9 @@
 package com.circularmarket.demo.service;
 
 import com.circularmarket.demo.dto.RegistroRequest;
+import com.circularmarket.demo.model.RolUsuario;
 import com.circularmarket.demo.model.Usuario;
+import com.circularmarket.demo.repository.RolUsuarioRepository;
 import com.circularmarket.demo.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,10 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final RolUsuarioRepository rolUsuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository,
+                          RolUsuarioRepository rolUsuarioRepository,
+                          PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.rolUsuarioRepository = rolUsuarioRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -25,12 +31,15 @@ public class UsuarioService {
             throw new IllegalArgumentException("Este email ya está registrado.");
         }
 
+        RolUsuario rol = rolUsuarioRepository.findByNombre("user")
+                .orElseGet(() -> rolUsuarioRepository.save(new RolUsuario("user")));
+
         Usuario usuario = new Usuario();
         usuario.setNombre(request.getNombre());
         usuario.setApellidos(request.getApellidos());
         usuario.setEmail(email);
         usuario.setContrasena(passwordEncoder.encode(request.getPassword()));
-        usuario.setRol("user");
+        usuario.setRol(rol);
         usuario.setTelefono(request.getTelefono());
         usuario.setDireccion(request.getDireccion());
 
