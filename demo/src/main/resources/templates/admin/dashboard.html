@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel de administración | CircularMarket</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-950 font-sans">
+    <div class="flex min-h-screen flex-col lg:flex-row">
+        <aside class="w-full border-b border-slate-200 bg-white/90 p-6 backdrop-blur lg:w-[270px] lg:border-r lg:border-b-0 lg:pb-8 lg:pt-8">
+            <div class="mb-8 border-b border-slate-200 pb-5">
+                <h1 class="text-2xl font-extrabold tracking-tight text-slate-900">CircularMarket</h1>
+                <p class="mt-2 text-sm text-slate-500">Panel de administración</p>
+            </div>
+
+            <nav class="flex flex-col gap-3">
+                <a class="inline-flex items-center rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 px-4 py-3 font-semibold text-white shadow-md transition hover:bg-blue-700" th:href="@{/admin}">Dashboard</a>
+                <a class="inline-flex items-center rounded-2xl px-4 py-3 font-semibold text-slate-900 transition hover:bg-slate-100" th:href="@{/admin/usuarios}">Usuarios</a>
+                <a class="inline-flex items-center rounded-2xl px-4 py-3 font-semibold text-slate-900 transition hover:bg-slate-100" th:href="@{/}">Volver a la web</a>
+                <a class="inline-flex items-center rounded-2xl px-4 py-3 font-semibold text-slate-900 transition hover:bg-slate-100" th:href="@{/logout}">Cerrar sesión</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 min-w-0 p-6 lg:p-8">
+            <header class="mb-6 flex flex-col gap-5 rounded-[20px] border border-slate-200 bg-white/90 p-6 shadow-lg backdrop-blur sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">Dashboard</h2>
+                    <p class="mt-2 text-sm text-slate-500">Resumen general del estado de la aplicación</p>
+                </div>
+
+                <div class="flex flex-wrap gap-3">
+                    <a class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700" th:href="@{/admin/usuarios/nuevo}">+ Nuevo usuario</a>
+                    <a class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100" th:href="@{/admin/usuarios}">Ver usuarios</a>
+                </div>
+            </header>
+
+            <section class="grid gap-5 xl:grid-cols-4">
+                <article class="relative overflow-hidden rounded-[20px] border border-slate-200 bg-white/90 p-5 shadow-lg">
+                    <span class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-600 to-sky-500"></span>
+                    <span class="text-sm text-slate-500">Usuarios</span>
+                    <strong class="mt-3 block text-3xl font-extrabold text-slate-900" th:text="${totalUsuarios != null ? totalUsuarios : 0}">0</strong>
+                    <span class="mt-2 block text-sm text-slate-500">Registrados en la plataforma</span>
+                </article>
+
+                <article class="relative overflow-hidden rounded-[20px] border border-slate-200 bg-white/90 p-5 shadow-lg">
+                    <span class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-600 to-sky-500"></span>
+                    <span class="text-sm text-slate-500">Administradores</span>
+                    <strong class="mt-3 block text-3xl font-extrabold text-slate-900" th:text="${totalAdmins != null ? totalAdmins : 0}">0</strong>
+                    <span class="mt-2 block text-sm text-slate-500">Con acceso al panel</span>
+                </article>
+
+                <article class="relative overflow-hidden rounded-[20px] border border-slate-200 bg-white/90 p-5 shadow-lg">
+                    <span class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-600 to-sky-500"></span>
+                    <span class="text-sm text-slate-500">Productos</span>
+                    <strong class="mt-3 block text-3xl font-extrabold text-slate-900" th:text="${totalProductos != null ? totalProductos : 0}">0</strong>
+                    <span class="mt-2 block text-sm text-slate-500">Publicados en el catálogo</span>
+                </article>
+
+                <article class="relative overflow-hidden rounded-[20px] border border-slate-200 bg-white/90 p-5 shadow-lg">
+                    <span class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-600 to-sky-500"></span>
+                    <span class="text-sm text-slate-500">Pedidos</span>
+                    <strong class="mt-3 block text-3xl font-extrabold text-slate-900" th:text="${totalPedidos != null ? totalPedidos : 0}">0</strong>
+                    <span class="mt-2 block text-sm text-slate-500">Pendientes de gestión</span>
+                </article>
+            </section>
+
+            <section class="grid gap-5 xl:grid-cols-2">
+                <article class="rounded-[20px] border border-slate-200 bg-white/90 shadow-lg">
+                    <div class="border-b border-slate-200 bg-slate-50 px-5 py-4">
+                        <h3 class="text-lg font-semibold text-slate-900">Accesos rápidos</h3>
+                    </div>
+                    <div class="grid gap-3 p-5">
+                        <a class="block rounded-2xl border border-slate-200 bg-white p-4 transition hover:-translate-y-0.5 hover:shadow-lg" th:href="@{/admin/usuarios}">
+                            <span class="block font-semibold">Gestionar usuarios</span>
+                            <small class="text-sm text-slate-500">Editar, eliminar o crear usuarios</small>
+                        </a>
+                        <a class="block rounded-2xl border border-slate-200 bg-white p-4 transition hover:-translate-y-0.5 hover:shadow-lg" th:href="@{/admin/usuarios/nuevo}">
+                            <span class="block font-semibold">Nuevo usuario</span>
+                            <small class="text-sm text-slate-500">Dar de alta un nuevo registro</small>
+                        </a>
+                        <a class="block rounded-2xl border border-slate-200 bg-white p-4 transition hover:-translate-y-0.5 hover:shadow-lg" th:href="@{/}">
+                            <span class="block font-semibold">Ir a la tienda</span>
+                            <small class="text-sm text-slate-500">Ver la parte pública de la web</small>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="rounded-[20px] border border-slate-200 bg-white/90 shadow-lg">
+                    <div class="border-b border-slate-200 bg-slate-50 px-5 py-4">
+                        <h3 class="text-lg font-semibold text-slate-900">Últimas acciones</h3>
+                    </div>
+                    <div class="p-5 text-slate-600">
+                        <p class="leading-7" th:if="${ultimasAcciones == null or #lists.isEmpty(ultimasAcciones)}">Todavía no hay acciones recientes para mostrar.</p>
+                        <ul class="mt-3 list-disc space-y-2 pl-5 text-slate-700" th:if="${ultimasAcciones != null and !#lists.isEmpty(ultimasAcciones)}">
+                            <li th:each="accion : ${ultimasAcciones}" th:text="${accion}">Acción reciente</li>
+                        </ul>
+                    </div>
+                </article>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

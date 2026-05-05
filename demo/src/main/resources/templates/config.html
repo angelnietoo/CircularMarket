@@ -5,81 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configuración de cuenta</title>
 
-    <link rel="stylesheet" th:href="@{/css/config.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="min-h-screen bg-slate-50 text-slate-950 font-sans">
 
-<div th:replace="fragments/header :: header"></div>
+<div class="min-h-screen px-4 py-10">
 
-<div class="config-page-wrapper">
+    <main class="mx-auto max-w-3xl">
 
-    <main class="config-content">
+        <section class="rounded-[18px] border border-slate-200 bg-white p-10 shadow-xl">
 
-        <section class="config-card">
+            <h1 class="mb-2 text-3xl font-bold">Configuración de cuenta</h1>
 
-            <h1 class="config-title">Configuración de cuenta</h1>
-
-            <p class="config-subtitle">
+            <p class="mb-8 text-slate-500">
                 Modifica tus datos personales y guarda los cambios.
             </p>
 
-            <div class="config-message config-success" th:if="${success}">
+            <div class="mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700" th:if="${success}">
                 Datos actualizados correctamente.
             </div>
 
-            <div class="config-message config-error" th:if="${error}" th:text="${error}">
+            <div class="mb-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700" th:if="${error}" th:text="${error}">
                 Ha ocurrido un error.
             </div>
 
             <form th:action="@{/configuracion}" method="post" th:object="${usuario}">
 
-                <div class="config-grid">
+                <input type="hidden" th:field="*{id}">
 
-                    <div class="config-field">
-                        <label for="nombre">Nombre</label>
-                        <input type="text" id="nombre" th:field="*{nombre}" class="config-input" required>
+                <div class="grid gap-4 md:grid-cols-2">
+
+                    <div class="flex flex-col gap-2">
+                        <label for="nombre" class="text-sm font-semibold text-slate-700">Nombre</label>
+                        <input type="text" id="nombre" th:field="*{nombre}" class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100" required>
                     </div>
 
-                    <div class="config-field">
-                        <label for="apellidos">Apellidos</label>
-                        <input type="text" id="apellidos" th:field="*{apellidos}" class="config-input" required>
+                    <div class="flex flex-col gap-2">
+                        <label for="apellidos" class="text-sm font-semibold text-slate-700">Apellidos</label>
+                        <input type="text" id="apellidos" th:field="*{apellidos}" class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100" required>
                     </div>
 
-                    <div class="config-field">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" th:field="*{email}" class="config-input" required>
+                    <div class="flex flex-col gap-2">
+                        <label for="email" class="text-sm font-semibold text-slate-700">Email</label>
+                        <input type="email" id="email" th:field="*{email}" class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100" required>
                     </div>
 
-                    <div class="config-field">
-                        <label for="telefono">Teléfono</label>
-                        <input type="tel" id="telefono" th:field="*{telefono}" class="config-input">
+                    <div class="flex flex-col gap-2">
+                        <label for="telefono" class="text-sm font-semibold text-slate-700">Teléfono</label>
+                        <input type="tel" id="telefono" th:field="*{telefono}" class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
                     </div>
 
-                    <div class="config-field config-full">
-                        <label for="direccion">Dirección</label>
-                        <input type="text" id="direccion" th:field="*{direccion}" class="config-input">
+                    <div class="md:col-span-2 flex flex-col gap-2">
+                        <label for="direccion" class="text-sm font-semibold text-slate-700">Dirección</label>
+                        <input type="text" id="direccion" th:field="*{direccion}" class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
                     </div>
 
-                    <div class="config-field">
-                        <label for="password">Nueva contraseña</label>
-                        <input type="password" id="password" name="password" class="config-input">
+                    <div class="flex flex-col gap-2">
+                        <label for="password" class="text-sm font-semibold text-slate-700">Nueva contraseña</label>
+                        <input type="password" id="password" name="password" class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
                     </div>
 
-                    <div class="config-field">
-                        <label for="repetirPassword">Repetir contraseña</label>
-                        <input type="password" id="repetirPassword" name="repetirPassword" class="config-input">
+                    <div class="flex flex-col gap-2">
+                        <label for="repetirPassword" class="text-sm font-semibold text-slate-700">Repetir contraseña</label>
+                        <input type="password" id="repetirPassword" name="repetirPassword" class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
                     </div>
 
                 </div>
 
-                <div class="config-actions">
-                    <button type="submit" class="config-btn-primary">
-                        Guardar cambios
-                    </button>
+                <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <button type="submit" class="inline-flex justify-center rounded-xl bg-blue-700 px-6 py-3 text-sm font-bold text-white hover:bg-blue-800">Guardar cambios</button>
 
-                    <a th:href="@{/inicio}" class="config-btn-secondary">
-                        Volver
-                    </a>
+                    <a th:href="@{/inicio}" class="inline-flex justify-center rounded-xl bg-slate-100 px-6 py-3 text-sm font-semibold text-slate-800 hover:bg-slate-200">Volver</a>
                 </div>
 
             </form>
@@ -89,8 +85,5 @@
     </main>
 
 </div>
-
-<div th:replace="fragments/footer :: footer"></div>
-
 </body>
 </html>

@@ -4,62 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
-    <link rel="stylesheet" th:href="@{/css/inicio.css}">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script th:src="@{/js/fragments/header.js}" defer></script>
 </head>
 
-<body>
+<body class="bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.07),transparent_28%),linear-gradient(180deg,#f8faff_0%,#eef3fb_100%)] text-slate-900 font-sans">
 
-<!-- HEADER -->
 <div th:replace="fragments/header :: header"></div>
 
-<div class="inicio-page-wrapper">
+<section class="relative overflow-hidden min-h-[420px] w-full border-b border-white/10 bg-cover bg-center text-white"
+         style="background-image: linear-gradient(90deg, rgba(17,24,39,0.78) 0%, rgba(17,24,39,0.56) 52%, rgba(17,24,39,0.35) 100%), url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1600&q=80');">
+    <div class="absolute inset-0 bg-gradient-to-b from-black/10 to-black/30 pointer-events-none"></div>
+    <div class="relative z-10 mx-auto flex max-w-3xl flex-col items-start justify-center px-4 py-20 sm:px-6 lg:px-8">
+        <p class="mb-4 inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[0.82rem] uppercase tracking-[0.14em] text-white/95">Bienvenido a Circular Market</p>
+        <h1 class="mb-4 text-[clamp(2.4rem,5vw,4.4rem)] font-extrabold leading-[1.02] tracking-[-0.03em]">Todo lo que necesitas, en un solo lugar</h1>
+        <p class="mb-8 max-w-3xl text-lg leading-8 text-white/90">Descubre productos destacados, ofertas y novedades con un diseño limpio, moderno y fácil de usar.</p>
+        <a th:href="@{/ofertas}" class="inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-[0_10px_24px_rgba(0,0,0,0.18)] transition duration-200 hover:bg-blue-700">Ver ofertas</a>
+    </div>
+</section>
 
-    <section class="inicio-hero">
-        <div class="inicio-hero-content">
-            <p class="inicio-hero-kicker">Bienvenido a Circular Market</p>
-            <h1 class="inicio-hero-title">Todo lo que necesitas, en un solo lugar</h1>
-            <p class="inicio-hero-text">
-                Descubre productos destacados, ofertas y novedades con un diseño limpio, moderno y fácil de usar.
-            </p>
-            <a th:href="@{/ofertas}" class="inicio-hero-button">Ver ofertas</a>
-        </div>
+<main class="mx-auto max-w-[1240px] px-4 py-12 sm:px-6 lg:px-8">
+    <section class="mb-6 flex flex-col gap-3 border-b border-slate-200 pb-4 sm:flex-row sm:items-end sm:justify-between">
+        <h2 class="text-2xl font-bold tracking-tight text-slate-900">Productos destacados</h2>
+        <a th:href="@{/productos}" class="text-blue-600 font-bold hover:text-blue-800">Ver todos</a>
     </section>
 
-    <main class="inicio-content">
-        <section class="inicio-section-header">
-            <h2>Productos destacados</h2>
-            <a th:href="@{/productos}" class="inicio-view-all">Ver todos</a>
-        </section>
+    <section class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <article class="group overflow-hidden rounded-[20px] border border-slate-200 bg-white shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-2xl" th:each="producto : ${productos}">
+            <div class="relative h-[220px] overflow-hidden bg-gradient-to-b from-slate-100 to-slate-50">
+                <img th:src="@{${producto.imagen}}" alt="Imagen del producto" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
+            </div>
 
-        <section class="inicio-product-grid">
-            <article class="inicio-product-card" th:each="producto : ${productos}">
-                <div class="inicio-product-image">
-                    <img th:src="@{${producto.imagen}}" alt="Imagen del producto">
+            <div class="p-5">
+                <h3 class="mb-2 text-lg font-extrabold text-slate-900" th:text="${producto.nombre}">Nombre del producto</h3>
+
+                <p class="mb-4 min-h-[50px] text-sm leading-7 text-slate-500" th:text="${producto.descripcion}">Descripción del producto</p>
+
+                <div class="flex flex-col gap-3 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
+                    <span class="text-base font-extrabold text-slate-900" th:text="${producto.precio} + ' €'">99,99 €</span>
+
+                    <a th:href="@{/producto/{id}(id=${producto.id})}" class="inline-flex w-full justify-center rounded-full border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-slate-200 sm:w-auto">Ver producto</a>
                 </div>
-
-                <div class="inicio-product-info">
-                    <h3 th:text="${producto.nombre}">Nombre del producto</h3>
-
-                    <p class="inicio-product-description" th:text="${producto.descripcion}">
-                        Descripción del producto
-                    </p>
-
-                    <div class="inicio-product-footer">
-                        <span class="inicio-product-price" th:text="${producto.precio} + ' €'">
-                            99,99 €
-                        </span>
-
-                        <a th:href="@{/producto/{id}(id=${producto.id})}" class="inicio-product-button">
-                            Ver producto
-                        </a>
-                    </div>
-                </div>
-            </article>
-        </section>
-    </main>
-
-</div>
+            </div>
+        </article>
+    </section>
+</main>
 
 <div th:replace="fragments/footer :: footer"></div>
+
 </body>
 </html>

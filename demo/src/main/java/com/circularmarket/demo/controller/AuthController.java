@@ -34,7 +34,7 @@ public class AuthController {
     @PostMapping("/registro")
     public String registrar(@ModelAttribute RegistroRequest registroRequest, Model model) {
 
-        // ===== VALIDACIÓN BÁSICA =====
+        //  Validación básica de los campos del formulario
         if (registroRequest.getNombre() == null || registroRequest.getNombre().trim().isEmpty()) {
             model.addAttribute("error", "Debes introducir el nombre.");
             return "registro";

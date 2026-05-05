@@ -4,53 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" th:href="@{/css/login.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="auth-wrapper">
-        <div class="auth-combined">
+<body class="bg-[radial-gradient(900px_500px_at_10%_-10%,rgba(21,81,193,0.06),transparent_60%),radial-gradient(900px_500px_at_110%_110%,rgba(21,81,193,0.06),transparent_60%),#f8fafc] font-sans text-slate-950">
+    <div class="flex min-h-screen items-center justify-center px-4 py-10">
+        <div class="grid w-full max-w-5xl gap-6 overflow-hidden rounded-[22px] border border-slate-200 bg-white shadow-2xl lg:grid-cols-[1fr_1fr]">
 
-            <div class="login-visual">
-                <img th:src="@{/images/LoginImagen.png}" alt="Circular Market empresa" class="login-image">
+            <div class="bg-white">
+                <img th:src="@{/images/LoginImagen.png}" alt="Circular Market empresa" class="h-full w-full object-cover">
             </div>
 
-            <div class="card">
-                <h1>Iniciar sesión</h1>
-                <p class="subtitle">Accede con tu email y contraseña</p>
+            <div class="relative flex flex-col gap-6 bg-white p-10 sm:p-12">
+                <div class="absolute inset-x-6 top-0 h-1 rounded-b-full bg-gradient-to-r from-blue-600 to-sky-400"></div>
+                <div class="pt-6"></div>
 
-                <div class="message" th:if="${param.error}">
-                    Email o contraseña incorrectos.
+                <div>
+                    <h1 class="mb-3 text-3xl font-bold">Iniciar sesión</h1>
+                    <p class="text-sm leading-7 text-slate-500">Accede con tu email y contraseña</p>
                 </div>
 
-                <div class="message success" th:if="${param.registrado}">
-                    Registro completado correctamente.
+                <div class="space-y-3" th:if="${param.error}">
+                    <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700">Email o contraseña incorrectos.</div>
                 </div>
 
-                <div class="message success" th:if="${param.logout}">
-                    Sesión cerrada correctamente.
+                <div class="space-y-3" th:if="${param.registrado}">
+                    <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">Registro completado correctamente.</div>
                 </div>
 
-                <form th:action="@{/login}" method="post">
-                    <div class="field">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="username" class="input" placeholder="Introduce tu email" required>
+                <div class="space-y-3" th:if="${param.logout}">
+                    <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">Sesión cerrada correctamente.</div>
+                </div>
+
+                <form th:action="@{/login}" method="post" class="space-y-5">
+                    <div class="space-y-2">
+                        <label for="email" class="block text-sm font-semibold text-slate-700">Email</label>
+                        <input type="email" id="email" name="username" placeholder="Introduce tu email" required class="w-full rounded-[14px] border border-slate-200 bg-slate-50 px-4 py-4 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
                     </div>
 
-                    <div class="field">
-                        <label for="password">Contraseña</label>
-                        <input type="password" id="password" name="password" class="input" placeholder="Introduce tu contraseña" required>
+                    <div class="space-y-2">
+                        <label for="password" class="block text-sm font-semibold text-slate-700">Contraseña</label>
+                        <input type="password" id="password" name="password" placeholder="Introduce tu contraseña" required class="w-full rounded-[14px] border border-slate-200 bg-slate-50 px-4 py-4 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
                     </div>
 
-                    <div class="forgot-link">
-                        <a th:href="@{/forgot-password}">He olvidado mi contraseña</a>
+                    <div class="text-right text-sm">
+                        <a th:href="@{/forgot-password}" class="font-semibold text-blue-800 hover:underline">He olvidado mi contraseña</a>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Entrar</button>
+                    <button type="submit" class="w-full rounded-[14px] bg-gradient-to-b from-blue-600 to-blue-700 px-5 py-4 text-sm font-bold text-white shadow-lg transition hover:from-blue-700 hover:to-blue-800">Entrar</button>
                 </form>
 
-                <div class="footer-link">
-                    ¿No tienes cuenta?
-                    <a th:href="@{/registro}">Regístrate aquí</a>
+                <div class="text-center text-sm text-slate-600">
+                    ¿No tienes cuenta? <a th:href="@{/registro}" class="font-semibold text-blue-700 hover:underline">Regístrate aquí</a>
                 </div>
             </div>
 

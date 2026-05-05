@@ -12,28 +12,27 @@ public class Usuario {
     @Column(name = "USid")
     private Long id;
 
-    // ===== IDENTIDAD =====
     @Column(name = "USnombre", nullable = false, length = 100)
     private String nombre;
 
     @Column(name = "USapellidos", nullable = false, length = 150)
     private String apellidos;
 
-    // ===== CREDENCIALES =====
     @Column(name = "UScorreo", nullable = false, unique = true, length = 255)
     private String email;
 
     @Column(name = "UScontrasena", nullable = false, length = 255)
     private String contrasena;
 
-    @Column(name = "USrol", nullable = false)
+    @Column(name = "USrol", nullable = false, length = 50)
     private String rol;
 
-    // ===== CONTACTO =====
     @Column(name = "UStelefono", length = 30)
     private String telefono;
 
-    // ===== AUDITORÍA =====
+    @Column(name = "USdireccion", length = 255)
+    private String direccion;
+
     @Column(name = "UScreadoen", insertable = false, updatable = false)
     private LocalDateTime creadoEn;
 
@@ -42,7 +41,9 @@ public class Usuario {
 
     public Usuario() {}
 
+    // ========================
     // GETTERS Y SETTERS
+    // ========================
 
     public Long getId() {
         return id;
@@ -53,7 +54,7 @@ public class Usuario {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = nombre != null ? nombre.trim() : null;
     }
 
     public String getApellidos() {
@@ -61,7 +62,7 @@ public class Usuario {
     }
 
     public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
+        this.apellidos = apellidos != null ? apellidos.trim() : null;
     }
 
     public String getEmail() {
@@ -69,7 +70,7 @@ public class Usuario {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email != null ? email.trim().toLowerCase() : null;
     }
 
     public String getContrasena() {
@@ -85,7 +86,7 @@ public class Usuario {
     }
 
     public void setRol(String rol) {
-        this.rol = rol;
+        this.rol = rol != null ? rol.trim().toUpperCase() : "COMPRADOR";
     }
 
     public String getTelefono() {
@@ -93,7 +94,15 @@ public class Usuario {
     }
 
     public void setTelefono(String telefono) {
-        this.telefono = telefono;
+        this.telefono = telefono != null ? telefono.trim() : null;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion != null ? direccion.trim() : null;
     }
 
     public LocalDateTime getCreadoEn() {
@@ -102,5 +111,16 @@ public class Usuario {
 
     public LocalDateTime getActualizadoEn() {
         return actualizadoEn;
+    }
+
+    // ========================
+    // MÉTODOS ÚTILES
+    // ========================
+
+    public String getNombreCompleto() {
+        if (nombre == null && apellidos == null) return "";
+        if (nombre == null || nombre.isBlank()) return apellidos;
+        if (apellidos == null || apellidos.isBlank()) return nombre;
+        return nombre + " " + apellidos;
     }
 }
