@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Productos | CircularMarket</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-950">
+
+<div class="min-h-screen lg:flex">
+    <div th:replace="~{fragments/sidebar-admin :: sidebar}"></div>
+
+    <main class="flex-1 p-6 lg:p-8">
+        <header class="mb-6 flex flex-col gap-4 rounded-[20px] border border-slate-200 bg-white p-6 shadow-lg sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h2 class="text-2xl font-bold tracking-tight text-slate-900">Productos</h2>
+                <p class="mt-1 text-sm text-slate-500">Gestiona los productos disponibles en la tienda</p>
+            </div>
+
+            <a th:href="@{/admin/productos/nuevo}"
+               class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700">
+                + Nuevo producto
+            </a>
+        </header>
+
+        <div class="mb-4" th:if="${mensajeExito}">
+            <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
+                 th:text="${mensajeExito}"></div>
+        </div>
+
+        <div class="mb-4" th:if="${mensajeError}">
+            <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700"
+                 th:text="${mensajeError}"></div>
+        </div>
+
+        <section class="overflow-hidden rounded-[20px] border border-slate-200 bg-white shadow-lg">
+            <div class="border-b border-slate-200 bg-slate-50 px-5 py-4">
+                <h3 class="text-lg font-semibold text-slate-900">Listado de productos</h3>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200">
+                    <thead class="bg-white">
+                    <tr>
+                        <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">ID</th>
+                        <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">Nombre</th>
+                        <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">Precio</th>
+                        <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">Stock</th>
+                        <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">Categoría</th>
+                        <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">Estado</th>
+                        <th class="px-5 py-2 text-center text-sm font-semibold text-slate-700">Acciones</th>
+                    </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-slate-200 bg-white">
+                    <tr th:if="${productos == null or #lists.isEmpty(productos)}">
+                        <td colspan="7" class="px-5 py-6 text-center text-sm text-slate-500">
+                            No hay productos registrados.
+                        </td>
+                    </tr>
+
+                    <tr th:each="producto : ${productos}" class="hover:bg-slate-50">
+                        <td class="px-5 py-2 text-sm font-medium text-slate-900" th:text="${producto.id}">1</td>
+                        <td class="px-5 py-2 text-sm text-slate-700" th:text="${producto.titulo}">Nombre</td>
+                        <td class="px-5 py-2 text-sm text-slate-700" th:text="${producto.precio} + ' €'">0 €</td>
+                        <td class="px-5 py-2 text-sm text-slate-700" th:text="${producto.stock}">0</td>
+                        <td class="px-5 py-2 text-sm text-slate-700"
+                            th:text="${producto.categoria != null ? producto.categoria.nombre : 'Sin categoría'}">
+                            Sin categoría
+                        </td>
+
+                        <td class="px-5 py-2 text-sm text-slate-700">
+                            <span th:if="${producto.activo}"
+                                  class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Activo
+                            </span>
+                            <span th:unless="${producto.activo}"
+                                  class="inline-flex items-center rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-700">
+                                Inactivo
+                            </span>
+                        </td>
+
+                        <td class="px-5 py-2">
+                            <div class="flex justify-end gap-2">
+                                <a class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+                                   th:href="@{'/admin/productos/' + ${producto.id} + '/editar'}">
+                                    Editar
+                                </a>
+
+                                <form th:action="@{'/admin/productos/' + ${producto.id} + '/eliminar'}"
+                                      method="post"
+                                      onsubmit="return confirm('¿Seguro que quieres eliminar este producto?');">
+                                    <button type="submit"
+                                            class="inline-flex items-center justify-center rounded-xl bg-rose-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-rose-700">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="p-5 text-center text-slate-600" th:if="${productos == null or #lists.isEmpty(productos)}">
+                <p class="mb-4">No hay productos registrados.</p>
+                <a class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
+                   th:href="@{/admin/productos/nuevo}">
+                    Crear primer producto
+                </a>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

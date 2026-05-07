@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
 
-    List<Categoria> findByActivaTrueOrderByOrdenAscNombreAsc();
+    List<Categoria> findByActivaTrueOrderByNombreAsc();
 
-    Optional<Categoria> findBySlugAndActivaTrue(String slug);
+    Optional<Categoria> findByNombreAndActivaTrue(String nombre);
 }

@@ -27,6 +27,13 @@ public class Usuario {
     @Column(name = "USrol", nullable = false, length = 50)
     private String rol;
 
+    @Transient
+    private Long rolId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "RUid")
+    private RolUsuario rolUsuario;
+
     @Column(name = "UStelefono", length = 30)
     private String telefono;
 
@@ -39,14 +46,15 @@ public class Usuario {
     @Column(name = "USactualizadoen", insertable = false, updatable = false)
     private LocalDateTime actualizadoEn;
 
-    public Usuario() {}
-
-    // ========================
-    // GETTERS Y SETTERS
-    // ========================
+    public Usuario() {
+    }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -86,7 +94,23 @@ public class Usuario {
     }
 
     public void setRol(String rol) {
-        this.rol = rol != null ? rol.trim().toUpperCase() : "COMPRADOR";
+        this.rol = rol != null ? rol.trim().toUpperCase() : null;
+    }
+
+    public Long getRolId() {
+        return rolId;
+    }
+
+    public void setRolId(Long rolId) {
+        this.rolId = rolId;
+    }
+
+    public RolUsuario getRolUsuario() {
+        return rolUsuario;
+    }
+
+    public void setRolUsuario(RolUsuario rolUsuario) {
+        this.rolUsuario = rolUsuario;
     }
 
     public String getTelefono() {
@@ -112,10 +136,6 @@ public class Usuario {
     public LocalDateTime getActualizadoEn() {
         return actualizadoEn;
     }
-
-    // ========================
-    // MÉTODOS ÚTILES
-    // ========================
 
     public String getNombreCompleto() {
         if (nombre == null && apellidos == null) return "";

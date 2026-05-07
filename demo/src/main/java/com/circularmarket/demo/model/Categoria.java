@@ -3,24 +3,21 @@ package com.circularmarket.demo.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "categorias")
+@Table(name = "categoriaproductos")
 public class Categoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CATid")
+    @Column(name = "CPid")
     private Long id;
 
-    @Column(name = "CATnombre", nullable = false, unique = true, length = 100)
+    @Column(name = "CPnombre", nullable = false, unique = true, length = 100)
     private String nombre;
 
-    @Column(name = "CATslug", nullable = false, unique = true, length = 120)
-    private String slug;
+    @Column(name = "CPdescripcion", length = 255)
+    private String descripcion;
 
-    @Column(name = "CATorden", nullable = false)
-    private Integer orden = 0;
-
-    @Column(name = "CATactiva", nullable = false)
+    @Column(name = "CPactiva", nullable = false)
     private boolean activa = true;
 
     public Categoria() {
@@ -38,20 +35,12 @@ public class Categoria {
         this.nombre = nombre != null ? nombre.trim() : null;
     }
 
-    public String getSlug() {
-        return slug;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setSlug(String slug) {
-        this.slug = slug != null ? slug.trim().toLowerCase() : null;
-    }
-
-    public Integer getOrden() {
-        return orden;
-    }
-
-    public void setOrden(Integer orden) {
-        this.orden = orden != null ? orden : 0;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion != null ? descripcion.trim() : null;
     }
 
     public boolean isActiva() {
