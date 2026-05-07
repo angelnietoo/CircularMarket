@@ -36,12 +36,15 @@ public class UsuarioService {
             throw new IllegalArgumentException("Este email ya está registrado.");
         }
 
+        RolUsuario rol = rolUsuarioRepository.findByNombre("user")
+                .orElseGet(() -> rolUsuarioRepository.save(new RolUsuario("user")));
+
         Usuario usuario = new Usuario();
         usuario.setNombre(request.getNombre());
         usuario.setApellidos(request.getApellidos());
         usuario.setEmail(email);
         usuario.setContrasena(passwordEncoder.encode(request.getPassword()));
-        usuario.setRol("user");
+        usuario.setRol(rol);
         usuario.setTelefono(request.getTelefono());
         usuario.setDireccion(request.getDireccion());
 

@@ -1,5 +1,6 @@
 package com.circularmarket.demo.controller;
 
+<<<<<<< HEAD
 import com.circularmarket.demo.model.RolUsuario;
 import com.circularmarket.demo.model.Usuario;
 import com.circularmarket.demo.repository.RolUsuarioRepository;
@@ -8,11 +9,21 @@ import com.circularmarket.demo.service.UsuarioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+=======
+import com.circularmarket.demo.model.Usuario;
+import com.circularmarket.demo.repository.RolUsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+>>>>>>> bbf15444231fb4b62d5f4a4c11e53092aa22254a
 
 @Controller
 @RequestMapping("/admin/usuarios")
 public class AdminUsuarioController {
 
+<<<<<<< HEAD
     private final UsuarioRepository usuarioRepository;
     private final RolUsuarioRepository rolUsuarioRepository;
     private final UsuarioService usuarioService;
@@ -30,6 +41,10 @@ public class AdminUsuarioController {
         model.addAttribute("usuarios", usuarioRepository.findAll());
         return "admin/usuarios-lista";
     }
+=======
+    @Autowired
+    private RolUsuarioRepository rolUsuarioRepository;
+>>>>>>> bbf15444231fb4b62d5f4a4c11e53092aa22254a
 
     @GetMapping("/nuevo")
     public String nuevoUsuario(Model model) {
@@ -37,6 +52,7 @@ public class AdminUsuarioController {
         model.addAttribute("roles", rolUsuarioRepository.findAll());
         return "admin/usuarios-formulario";
     }
+<<<<<<< HEAD
 
     @GetMapping("/{id}/editar")
     public String editarUsuario(@PathVariable Long id, Model model) {
@@ -72,4 +88,6 @@ public class AdminUsuarioController {
         usuarioService.eliminarPorId(id);
         return "redirect:/admin/usuarios";
     }
+=======
+>>>>>>> bbf15444231fb4b62d5f4a4c11e53092aa22254a
 }

@@ -24,8 +24,12 @@ public class Usuario {
     @Column(name = "UScontrasena", nullable = false, length = 255)
     private String contrasena;
 
-    @Column(name = "USrol", nullable = false, length = 50)
-    private String rol;
+    @ManyToOne
+    @JoinColumn(name = "RUid")
+    private RolUsuario rol;
+
+    @Column(name = "usrol", nullable = false, length = 50)
+    private String usrol;
 
     @Transient
     private Long rolId;
@@ -89,10 +93,12 @@ public class Usuario {
         this.contrasena = contrasena;
     }
 
-    public String getRol() {
+    // 🔥 CAMBIO: ahora devuelve RolUsuario
+    public RolUsuario getRol() {
         return rol;
     }
 
+<<<<<<< HEAD
     public void setRol(String rol) {
         this.rol = rol != null ? rol.trim().toUpperCase() : null;
     }
@@ -111,6 +117,19 @@ public class Usuario {
 
     public void setRolUsuario(RolUsuario rolUsuario) {
         this.rolUsuario = rolUsuario;
+=======
+    public void setRol(RolUsuario rol) {
+        this.rol = rol;
+        this.usrol = rol != null ? rol.getNombre() : null;
+    }
+
+    public String getUsrol() {
+        return usrol;
+    }
+
+    public void setUsrol(String usrol) {
+        this.usrol = usrol != null ? usrol.trim() : null;
+>>>>>>> bbf15444231fb4b62d5f4a4c11e53092aa22254a
     }
 
     public String getTelefono() {
