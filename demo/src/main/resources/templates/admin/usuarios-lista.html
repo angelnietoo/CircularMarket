@@ -15,7 +15,9 @@
         <header class="mb-6 flex flex-col gap-4 rounded-[20px] border border-slate-200 bg-white p-6 shadow-lg sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h2 class="text-2xl font-bold tracking-tight text-slate-900">Usuarios</h2>
-                <p class="mt-1 text-sm text-slate-500">Gestiona los registros de usuarios del sistema</p>
+                <p class="mt-1 text-sm text-slate-500">
+                    Gestiona los registros de usuarios del sistema
+                </p>
             </div>
 
             <a th:href="@{/admin/usuarios/nuevo}"
@@ -26,11 +28,15 @@
 
         <section class="rounded-[20px] border border-slate-200 bg-white shadow-lg">
             <div class="border-b border-slate-200 bg-slate-50 px-5 py-4">
-                <h3 class="text-lg font-semibold text-slate-900">Listado de usuarios</h3>
+                <h3 class="text-lg font-semibold text-slate-900">
+                    Listado de usuarios
+                </h3>
             </div>
 
             <form class="flex flex-col gap-3 p-5 sm:flex-row sm:items-center"
-                  th:action="@{/admin/usuarios}" method="get">
+                  th:action="@{/admin/usuarios}"
+                  method="get">
+
                 <input type="text"
                        name="q"
                        placeholder="Buscar por nombre, email o rol"
@@ -43,7 +49,9 @@
                 </button>
             </form>
 
-            <div class="overflow-x-auto px-5 pb-5" th:if="${usuarios != null and !#lists.isEmpty(usuarios)}">
+            <div class="overflow-x-auto px-5 pb-5"
+                 th:if="${usuarios != null and !#lists.isEmpty(usuarios)}">
+
                 <table class="min-w-full divide-y divide-slate-200">
                     <thead class="bg-white">
                     <tr>
@@ -59,17 +67,47 @@
                     </thead>
 
                     <tbody class="divide-y divide-slate-200 bg-white">
-                    <tr th:each="usuario : ${usuarios}" class="hover:bg-slate-50">
-                        <td class="px-5 py-2 text-sm font-medium text-slate-900" th:text="${usuario.id}">1</td>
-                        <td class="px-5 py-2 text-sm text-slate-700" th:text="${usuario.nombre}">Nombre</td>
-                        <td class="px-5 py-2 text-sm text-slate-700" th:text="${usuario.apellidos}">Apellidos</td>
-                        <td class="px-5 py-2 text-sm text-slate-700" th:text="${usuario.email}">email@correo.com</td>
-                        <td class="px-5 py-2 text-sm text-slate-700" th:text="${usuario.telefono}">600000000</td>
-                        <td class="px-5 py-2 text-sm text-slate-700" th:text="${usuario.direccion}">Dirección</td>
-                        <td class="px-5 py-2 text-sm text-slate-700" th:text="${usuario.rol}">user</td>
+                    <tr th:each="usuario : ${usuarios}"
+                        class="hover:bg-slate-50">
+
+                        <td class="px-5 py-2 text-sm font-medium text-slate-900"
+                            th:text="${usuario.id}">
+                            1
+                        </td>
+
+                        <td class="px-5 py-2 text-sm text-slate-700"
+                            th:text="${usuario.nombre}">
+                            Nombre
+                        </td>
+
+                        <td class="px-5 py-2 text-sm text-slate-700"
+                            th:text="${usuario.apellidos}">
+                            Apellidos
+                        </td>
+
+                        <td class="px-5 py-2 text-sm text-slate-700"
+                            th:text="${usuario.email}">
+                            email@correo.com
+                        </td>
+
+                        <td class="px-5 py-2 text-sm text-slate-700"
+                            th:text="${usuario.telefono}">
+                            600000000
+                        </td>
+
+                        <td class="px-5 py-2 text-sm text-slate-700"
+                            th:text="${usuario.direccion}">
+                            Dirección
+                        </td>
+
+                        <td class="px-5 py-2 text-sm text-slate-700"
+                            th:text="${usuario.rol != null ? usuario.rol.nombre : 'Sin rol'}">
+                            USER
+                        </td>
 
                         <td class="px-5 py-2">
                             <div class="flex justify-end gap-2">
+
                                 <a th:href="@{'/admin/usuarios/' + ${usuario.id} + '/editar'}"
                                    class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
                                     Editar
@@ -78,11 +116,13 @@
                                 <form th:action="@{'/admin/usuarios/' + ${usuario.id} + '/eliminar'}"
                                       method="post"
                                       onsubmit="return confirm('¿Seguro que quieres eliminar este usuario?');">
+
                                     <button type="submit"
                                             class="inline-flex items-center justify-center rounded-xl bg-rose-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-rose-700">
                                         Eliminar
                                     </button>
                                 </form>
+
                             </div>
                         </td>
                     </tr>
@@ -90,8 +130,11 @@
                 </table>
             </div>
 
-            <div class="p-5 text-center text-slate-600" th:if="${usuarios == null or #lists.isEmpty(usuarios)}">
+            <div class="p-5 text-center text-slate-600"
+                 th:if="${usuarios == null or #lists.isEmpty(usuarios)}">
+
                 <p class="mb-4">No hay usuarios registrados.</p>
+
                 <a class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
                    th:href="@{/admin/usuarios/nuevo}">
                     Crear primer usuario
@@ -100,5 +143,6 @@
         </section>
     </main>
 </div>
+
 </body>
 </html>

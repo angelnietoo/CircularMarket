@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos | CircularMarket</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50 text-slate-950 font-sans">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="mx-auto max-w-7xl px-6 py-8 lg:px-8">
+
+    <header class="mb-8 rounded-[20px] border border-slate-200 bg-white/90 p-6 shadow-lg">
+        <h1 class="text-3xl font-bold text-slate-900">Todos los productos</h1>
+        <p class="mt-2 text-sm text-slate-500">
+            Explora todos los productos disponibles en CircularMarket.
+        </p>
+    </header>
+
+    <section th:if="${productos == null or #lists.isEmpty(productos)}"
+             class="rounded-[20px] border border-slate-200 bg-white p-8 text-center shadow">
+        <h2 class="text-xl font-bold text-slate-900">No hay productos disponibles</h2>
+        <p class="mt-2 text-sm text-slate-500">Todavía no se han añadido productos a la web.</p>
+    </section>
+
+    <section th:if="${productos != null and !#lists.isEmpty(productos)}"
+             class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
+        <article th:each="producto : ${productos}"
+                 class="overflow-hidden rounded-[20px] border border-slate-200 bg-white shadow-md transition hover:-translate-y-1 hover:shadow-xl">
+
+            <div class="h-48 bg-slate-100">
+                <img th:if="${producto.imagen != null}"
+                     th:src="@{/productos/imagen/{id}(id=${producto.id})}"
+                     alt="Imagen del producto"
+                     class="h-full w-full object-cover">
+
+                <div th:if="${producto.imagen == null}"
+                     class="flex h-full w-full items-center justify-center text-sm font-semibold text-slate-400">
+                    Sin imagen
+                </div>
+            </div>
+
+            <div class="space-y-3 p-5">
+                <div>
+                    <h2 th:text="${producto.titulo}"
+                        class="line-clamp-2 text-lg font-bold text-slate-900">
+                        Nombre del producto
+                    </h2>
+
+                    <p th:if="${producto.categoria != null}"
+                       th:text="${producto.categoria.nombre}"
+                       class="mt-1 text-xs font-semibold uppercase tracking-wide text-blue-600">
+                        Categoría
+                    </p>
+                </div>
+
+                <p th:text="${producto.descripcion}"
+                   class="line-clamp-3 text-sm text-slate-500">
+                    Descripción del producto
+                </p>
+
+                <div class="flex items-center justify-between gap-3 pt-2">
+                    <span th:text="${#numbers.formatDecimal(producto.precio, 1, 2)} + ' €'"
+                          class="text-xl font-extrabold text-slate-900">
+                        0.00 €
+                    </span>
+
+                    <span th:if="${producto.stock != null}"
+                          th:text="'Stock: ' + ${producto.stock}"
+                          class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                        Stock
+                    </span>
+                </div>
+
+                <a th:href="@{/productos/{id}(id=${producto.id})}"
+                   class="mt-3 inline-flex w-full items-center justify-center rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700">
+                    Ver producto
+                </a>
+            </div>
+        </article>
+
+    </section>
+
+</main>
+
+<script>
+    function toggleCuentaMenu() {
+        const menu = document.getElementById("headerCuentaMenu");
+        if (menu) {
+            menu.classList.toggle("hidden");
+        }
+    }
+</script>
+
+</body>
+</html>

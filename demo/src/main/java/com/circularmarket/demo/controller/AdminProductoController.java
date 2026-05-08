@@ -29,8 +29,12 @@ public class AdminProductoController {
 
     @GetMapping("/nuevo")
     public String nuevoProducto(Model model) {
-        model.addAttribute("producto", new Producto());
-        model.addAttribute("categorias", categoriaRepository.findAll());
+        Producto producto = new Producto();
+        producto.setActivo(true);
+
+        model.addAttribute("producto", producto);
+        model.addAttribute("categorias", categoriaRepository.findByActivaTrueOrderByNombreAsc());
+
         return "admin/productos-formulario";
     }
 
@@ -40,18 +44,19 @@ public class AdminProductoController {
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
 
         model.addAttribute("producto", producto);
-        model.addAttribute("categorias", categoriaRepository.findAll());
+        model.addAttribute("categorias", categoriaRepository.findByActivaTrueOrderByNombreAsc());
+
         return "admin/productos-formulario";
     }
 
     @PostMapping("/guardar")
     public String guardarProducto(@ModelAttribute("producto") Producto formProducto,
-                                   @RequestParam(value = "categoriaId", required = false) Long categoriaId,
-                                   Model model) {
+                                  @RequestParam(value = "categoriaId", required = false) Long categoriaId,
+                                  Model model) {
 
         if (categoriaId == null) {
             model.addAttribute("error", "Debes seleccionar una categoría.");
-            model.addAttribute("categorias", categoriaRepository.findAll());
+            model.addAttribute("categorias", categoriaRepository.findByActivaTrueOrderByNombreAsc());
             model.addAttribute("producto", formProducto);
             return "admin/productos-formulario";
         }
@@ -59,20 +64,24 @@ public class AdminProductoController {
         Categoria categoria = categoriaRepository.findById(categoriaId)
                 .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
 
-        Producto producto = (formProducto.getId() != null)
-                ? productoRepository.findById(formProducto.getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"))
-                : new Producto();
+        Producto producto;
+
+        if (formProducto.getId() != null) {
+            producto = productoRepository.findById(formProducto.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+        } else {
+            producto = new Producto();
+        }
 
         producto.setTitulo(formProducto.getTitulo());
+        producto.setDescripcion(formProducto.getDescripcion());
         producto.setPrecio(formProducto.getPrecio());
         producto.setStock(formProducto.getStock());
-        producto.setImagen(formProducto.getImagen());
-        producto.setDescripcion(formProducto.getDescripcion());
-        producto.setActivo(formProducto.getActivo());
+        producto.setActivo(formProducto.getActivo() != null ? formProducto.getActivo() : false);
         producto.setCategoria(categoria);
 
         productoRepository.save(producto);
+
         return "redirect:/admin/productos";
     }
 

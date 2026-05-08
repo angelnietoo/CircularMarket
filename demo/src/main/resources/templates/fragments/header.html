@@ -1,4 +1,7 @@
-<header th:fragment="header" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<header th:fragment="header"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
     <div class="sticky top-0 z-[1000] relative flex w-full h-[60px] items-center gap-4
                 bg-[rgba(239,246,255,0.92)] backdrop-blur-md text-gray-800
                 px-7 py-0 border-b border-gray-300
@@ -10,12 +13,16 @@
         </div>
 
         <form class="absolute left-1/2 top-1/2 flex w-full max-w-[520px] min-w-0 -translate-x-1/2 -translate-y-1/2 justify-center"
-              th:action="@{/buscar}"
+              th:action="@{/productos}"
               method="get">
             <div class="flex w-full max-w-[520px] min-w-0 h-9 border border-gray-300 rounded-lg overflow-hidden bg-white box-border transition-colors duration-200 ease-in-out focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100/25 sm:h-[36px] sm:rounded-lg">
                 <input type="text"
                        name="q"
+                       th:value="${busqueda}"
                        placeholder="Buscar productos..."
+                       maxlength="60"
+                       pattern="[A-Za-zÁÉÍÓÚáéíóúÑñÜü0-9 .,\-]+"
+                       autocomplete="off"
                        class="flex-1 border-0 outline-none bg-transparent text-gray-800 text-sm h-full px-3.5 min-w-0 box-border placeholder-gray-400 focus:shadow-none sm:text-sm sm:px-3">
 
                 <button type="submit"
@@ -30,10 +37,24 @@
         </form>
 
         <div class="shrink-0 ml-auto flex items-center gap-3.5 sm:gap-2.5">
-            <a th:href="@{/carrito}" class="text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600">Carrito</a>
-            <a th:href="@{/pedidos}" class="text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600">Pedidos</a>
+            <a th:href="@{/productos}"
+               class="text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600">
+                Productos
+            </a>
 
-            <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')" class="text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600">
+            <a th:href="@{/carrito}"
+               class="text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600">
+                Carrito
+            </a>
+
+            <a th:href="@{/pedidos}"
+               class="text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600">
+                Pedidos
+            </a>
+
+            <a th:href="@{/admin}"
+               sec:authorize="hasAuthority('ROLE_ADMIN')"
+               class="text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600">
                 Panel de administrador
             </a>
 
@@ -53,11 +74,17 @@
                     </span>
                 </button>
 
-                <div id="headerCuentaMenu" class="absolute top-full right-0 min-w-52 bg-white border border-gray-300 rounded-2xl shadow-xl p-2 hidden z-50 sm:right-0 sm:left-auto">
-                    <a th:href="@{/configuracion}" class="block p-2.5 px-3 rounded-xl text-gray-800 no-underline font-semibold text-sm transition-colors duration-200 ease-in-out hover:bg-blue-50 hover:text-blue-800">Configuración</a>
+                <div id="headerCuentaMenu"
+                     class="absolute top-full right-0 min-w-52 bg-white border border-gray-300 rounded-2xl shadow-xl p-2 hidden z-50 sm:right-0 sm:left-auto">
+
+                    <a th:href="@{/configuracion}"
+                       class="block p-2.5 px-3 rounded-xl text-gray-800 no-underline font-semibold text-sm transition-colors duration-200 ease-in-out hover:bg-blue-50 hover:text-blue-800">
+                        Configuración
+                    </a>
 
                     <form th:action="@{/logout}" method="post" style="margin:0;">
-                        <button type="submit" class="w-full border-0 bg-transparent text-gray-800 text-left p-2.5 px-3 rounded-xl font-semibold text-sm cursor-pointer mt-1 transition-colors duration-200 ease-in-out hover:bg-blue-50 hover:text-blue-800">
+                        <button type="submit"
+                                class="w-full border-0 bg-transparent text-gray-800 text-left p-2.5 px-3 rounded-xl font-semibold text-sm cursor-pointer mt-1 transition-colors duration-200 ease-in-out hover:bg-blue-50 hover:text-blue-800">
                             Cerrar sesión
                         </button>
                     </form>
@@ -67,10 +94,18 @@
     </div>
 
     <nav class="bg-white/82 backdrop-blur-lg h-[32px] px-7 flex justify-center flex-wrap gap-0 border-b border-gray-300 sm:h-[32px] sm:px-3.5 sm:gap-0">
-        <a th:href="@{/categoria/electronica}" class="h-full text-gray-500 no-underline text-sm font-semibold px-3.5 rounded-none leading-tight inline-flex items-center justify-center transition-colors duration-200 ease-in-out hover:bg-blue-600 hover:text-white m-0 sm:text-sm sm:px-3">Electrónica</a>
-        <a th:href="@{/categoria/moda}" class="h-full text-gray-500 no-underline text-sm font-semibold px-3.5 rounded-none leading-tight inline-flex items-center justify-center transition-colors duration-200 ease-in-out hover:bg-blue-600 hover:text-white m-0 sm:text-sm sm:px-3">Moda</a>
-        <a th:href="@{/categoria/hogar}" class="h-full text-gray-500 no-underline text-sm font-semibold px-3.5 rounded-none leading-tight inline-flex items-center justify-center transition-colors duration-200 ease-in-out hover:bg-blue-600 hover:text-white m-0 sm:text-sm sm:px-3">Hogar</a>
-        <a th:href="@{/categoria/gaming}" class="h-full text-gray-500 no-underline text-sm font-semibold px-3.5 rounded-none leading-tight inline-flex items-center justify-center transition-colors duration-200 ease-in-out hover:bg-blue-600 hover:text-white m-0 sm:text-sm sm:px-3">Gaming</a>
-        <a th:href="@{/ofertas}" class="h-full text-gray-500 no-underline text-sm font-semibold px-3.5 rounded-none leading-tight inline-flex items-center justify-center transition-colors duration-200 ease-in-out hover:bg-blue-600 hover:text-white m-0 sm:text-sm sm:px-3">Ofertas</a>
+
+        <a th:each="categoria : ${categoriasHeader}"
+           th:href="@{/categoria/{id}(id=${categoria.id})}"
+           th:text="${categoria.nombre}"
+           class="h-full text-gray-500 no-underline text-sm font-semibold px-3.5 rounded-none leading-tight inline-flex items-center justify-center transition-colors duration-200 ease-in-out hover:bg-blue-600 hover:text-white m-0 sm:text-sm sm:px-3">
+            Categoría
+        </a>
+
+        <a th:href="@{/ofertas}"
+           class="h-full text-gray-500 no-underline text-sm font-semibold px-3.5 rounded-none leading-tight inline-flex items-center justify-center transition-colors duration-200 ease-in-out hover:bg-blue-600 hover:text-white m-0 sm:text-sm sm:px-3">
+            Ofertas
+        </a>
+
     </nav>
 </header>

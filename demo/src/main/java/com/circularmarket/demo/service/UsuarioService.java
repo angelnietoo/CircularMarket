@@ -19,6 +19,7 @@ public class UsuarioService {
     public UsuarioService(UsuarioRepository usuarioRepository,
                           RolUsuarioRepository rolUsuarioRepository,
                           PasswordEncoder passwordEncoder) {
+
         this.usuarioRepository = usuarioRepository;
         this.rolUsuarioRepository = rolUsuarioRepository;
         this.passwordEncoder = passwordEncoder;
@@ -26,6 +27,7 @@ public class UsuarioService {
 
     @Transactional
     public Usuario registrar(RegistroRequest request) {
+
         String email = normalizarEmail(request.getEmail());
 
         if (email == null) {
@@ -36,22 +38,25 @@ public class UsuarioService {
             throw new IllegalArgumentException("Este email ya está registrado.");
         }
 
-        RolUsuario rol = rolUsuarioRepository.findByNombre("user")
-                .orElseGet(() -> rolUsuarioRepository.save(new RolUsuario("user")));
-
         Usuario usuario = new Usuario();
+
         usuario.setNombre(request.getNombre());
         usuario.setApellidos(request.getApellidos());
         usuario.setEmail(email);
         usuario.setContrasena(passwordEncoder.encode(request.getPassword()));
-        usuario.setRol(rol);
         usuario.setTelefono(request.getTelefono());
         usuario.setDireccion(request.getDireccion());
+
+        RolUsuario rolUser = rolUsuarioRepository.findByNombre("USER")
+                .orElseThrow(() -> new IllegalArgumentException("Rol USER no encontrado"));
+
+        usuario.setRol(rolUser);
 
         return usuarioRepository.save(usuario);
     }
 
     public Usuario buscarPorEmail(String email) {
+
         String emailNormalizado = normalizarEmail(email);
 
         if (emailNormalizado == null) {
@@ -62,6 +67,7 @@ public class UsuarioService {
     }
 
     public Usuario buscarPorId(Long id) {
+
         if (id == null) {
             return null;
         }
@@ -70,9 +76,13 @@ public class UsuarioService {
     }
 
     @Transactional
-    public Usuario actualizarUsuario(Long id, Usuario datosFormulario, String passwordNueva, String repetirPassword) {
+    public Usuario actualizarUsuario(Long id,
+                                     Usuario datosFormulario,
+                                     String passwordNueva,
+                                     String repetirPassword) {
+
         Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No se ha encontrado el usuario logueado."));
+                .orElseThrow(() -> new IllegalArgumentException("No se ha encontrado el usuario."));
 
         String emailNuevo = normalizarEmail(datosFormulario.getEmail());
 
@@ -80,7 +90,9 @@ public class UsuarioService {
             throw new IllegalArgumentException("El email no puede estar vacío.");
         }
 
-        if (!emailNuevo.equalsIgnoreCase(usuario.getEmail()) && usuarioRepository.existsByEmail(emailNuevo)) {
+        if (!emailNuevo.equalsIgnoreCase(usuario.getEmail())
+                && usuarioRepository.existsByEmail(emailNuevo)) {
+
             throw new IllegalArgumentException("Este email ya está registrado.");
         }
 
@@ -91,9 +103,11 @@ public class UsuarioService {
         usuario.setDireccion(datosFormulario.getDireccion());
 
         if (passwordNueva != null && !passwordNueva.isBlank()) {
+
             if (!passwordNueva.equals(repetirPassword)) {
                 throw new IllegalArgumentException("Las contraseñas no coinciden.");
             }
+
             usuario.setContrasena(passwordEncoder.encode(passwordNueva));
         }
 
@@ -102,40 +116,65 @@ public class UsuarioService {
 
     @Transactional
     public Usuario guardarUsuarioAdmin(Usuario datosFormulario) {
+
         Usuario usuario;
 
         if (datosFormulario.getId() == null) {
+
             usuario = new Usuario();
 
-            if (datosFormulario.getContrasena() == null || datosFormulario.getContrasena().isBlank()) {
+            if (datosFormulario.getContrasena() == null
+                    || datosFormulario.getContrasena().isBlank()) {
+
                 throw new IllegalArgumentException("La contraseña es obligatoria.");
             }
+
         } else {
+
             usuario = usuarioRepository.findById(datosFormulario.getId())
                     .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
         }
 
         String email = normalizarEmail(datosFormulario.getEmail());
+
         if (email == null) {
             throw new IllegalArgumentException("El email no puede estar vacío.");
         }
 
-        if (!email.equalsIgnoreCase(usuario.getEmail()) && usuarioRepository.existsByEmail(email)) {
+        if (!email.equalsIgnoreCase(usuario.getEmail())
+                && usuarioRepository.existsByEmail(email)) {
+
             throw new IllegalArgumentException("Este email ya está registrado.");
         }
-
-        RolUsuario rolSeleccionado = resolverRol(datosFormulario, usuario);
 
         usuario.setNombre(datosFormulario.getNombre());
         usuario.setApellidos(datosFormulario.getApellidos());
         usuario.setEmail(email);
         usuario.setTelefono(datosFormulario.getTelefono());
         usuario.setDireccion(datosFormulario.getDireccion());
-        usuario.setRolUsuario(rolSeleccionado);
-        usuario.setRol(rolSeleccionado.getNombre());
 
-        if (datosFormulario.getContrasena() != null && !datosFormulario.getContrasena().isBlank()) {
-            usuario.setContrasena(passwordEncoder.encode(datosFormulario.getContrasena()));
+        if (datosFormulario.getRol() != null) {
+
+            RolUsuario rol = rolUsuarioRepository.findById(
+                    datosFormulario.getRol().getId()
+            ).orElseThrow(() -> new IllegalArgumentException("Rol no encontrado"));
+
+            usuario.setRol(rol);
+
+        } else {
+
+            RolUsuario rolUser = rolUsuarioRepository.findByNombre("USER")
+                    .orElseThrow(() -> new IllegalArgumentException("Rol USER no encontrado"));
+
+            usuario.setRol(rolUser);
+        }
+
+        if (datosFormulario.getContrasena() != null
+                && !datosFormulario.getContrasena().isBlank()) {
+
+            usuario.setContrasena(
+                    passwordEncoder.encode(datosFormulario.getContrasena())
+            );
         }
 
         return usuarioRepository.save(usuario);
@@ -143,6 +182,7 @@ public class UsuarioService {
 
     @Transactional
     public void eliminarPorId(Long id) {
+
         if (id == null) {
             throw new IllegalArgumentException("El id no puede ser nulo.");
         }
@@ -154,27 +194,14 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    private RolUsuario resolverRol(Usuario datosFormulario, Usuario usuario) {
-        if (datosFormulario.getRolId() != null) {
-            return rolUsuarioRepository.findById(datosFormulario.getRolId())
-                    .orElseThrow(() -> new IllegalArgumentException("El rol seleccionado no existe."));
-        }
-
-        if (usuario.getRolUsuario() != null) {
-            return usuario.getRolUsuario();
-        }
-
-        return rolUsuarioRepository.findAll().stream()
-                .filter(r -> "USER".equalsIgnoreCase(r.getNombre()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Debes seleccionar un rol."));
-    }
-
     private String normalizarEmail(String email) {
+
         if (email == null) {
             return null;
         }
+
         String normalizado = email.trim().toLowerCase();
+
         return normalizado.isBlank() ? null : normalizado;
     }
 }

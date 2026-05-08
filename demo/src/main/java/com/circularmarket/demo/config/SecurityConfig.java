@@ -32,7 +32,20 @@ public class SecurityConfig {
         http.authenticationProvider(authenticationProvider);
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/registro", "/inicio", "/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers(
+                        "/",
+                        "/login",
+                        "/registro",
+                        "/inicio",
+                        "/buscar",
+                        "/css/**",
+                        "/js/**",
+                        "/images/**",
+                        "/favicon.ico"
+                ).permitAll()
+
+                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+
                 .anyRequest().authenticated()
         );
 
@@ -45,6 +58,7 @@ public class SecurityConfig {
         );
 
         http.logout(logout -> logout
+                .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout=1")
                 .permitAll()
         );

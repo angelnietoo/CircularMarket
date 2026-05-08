@@ -31,15 +31,11 @@ public class DetallesUsuarioService implements UserDetailsService {
         Usuario usuario = usuarioRepository.findByEmail(email.trim().toLowerCase())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-        String rol = null;
+        String rol = "USER";
 
-        if (usuario.getRol() != null && usuario.getRol().getNombre() != null && !usuario.getRol().getNombre().isBlank()) {
-            rol = usuario.getRol().getNombre();
-        } else if (usuario.getUsrol() != null && !usuario.getUsrol().isBlank()) {
-            rol = usuario.getUsrol();
+        if (usuario.getRol() != null && usuario.getRol().getNombre() != null) {
+            rol = usuario.getRol().getNombre().toUpperCase(Locale.ROOT);
         }
-
-        rol = (rol == null || rol.isBlank()) ? "COMPRADOR" : rol.toUpperCase(Locale.ROOT);
 
         GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + rol);
 

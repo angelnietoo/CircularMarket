@@ -24,19 +24,9 @@ public class Usuario {
     @Column(name = "UScontrasena", nullable = false, length = 255)
     private String contrasena;
 
-    @ManyToOne
-    @JoinColumn(name = "RUid")
-    private RolUsuario rol;
-
-    @Column(name = "usrol", nullable = false, length = 50)
-    private String usrol;
-
-    @Transient
-    private Long rolId;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "RUid")
-    private RolUsuario rolUsuario;
+    private RolUsuario rol;
 
     @Column(name = "UStelefono", length = 30)
     private String telefono;
@@ -93,43 +83,12 @@ public class Usuario {
         this.contrasena = contrasena;
     }
 
-    // 🔥 CAMBIO: ahora devuelve RolUsuario
     public RolUsuario getRol() {
         return rol;
     }
 
-<<<<<<< HEAD
-    public void setRol(String rol) {
-        this.rol = rol != null ? rol.trim().toUpperCase() : null;
-    }
-
-    public Long getRolId() {
-        return rolId;
-    }
-
-    public void setRolId(Long rolId) {
-        this.rolId = rolId;
-    }
-
-    public RolUsuario getRolUsuario() {
-        return rolUsuario;
-    }
-
-    public void setRolUsuario(RolUsuario rolUsuario) {
-        this.rolUsuario = rolUsuario;
-=======
     public void setRol(RolUsuario rol) {
         this.rol = rol;
-        this.usrol = rol != null ? rol.getNombre() : null;
-    }
-
-    public String getUsrol() {
-        return usrol;
-    }
-
-    public void setUsrol(String usrol) {
-        this.usrol = usrol != null ? usrol.trim() : null;
->>>>>>> bbf15444231fb4b62d5f4a4c11e53092aa22254a
     }
 
     public String getTelefono() {
@@ -160,6 +119,7 @@ public class Usuario {
         if (nombre == null && apellidos == null) return "";
         if (nombre == null || nombre.isBlank()) return apellidos;
         if (apellidos == null || apellidos.isBlank()) return nombre;
+
         return nombre + " " + apellidos;
     }
 }
