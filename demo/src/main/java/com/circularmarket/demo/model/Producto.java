@@ -33,8 +33,11 @@ public class Producto {
     private Boolean activo = true;
 
     @Lob
-    @Column(name = "PRimagen", columnDefinition = "MEDIUMBLOB")
+    @Column(name = "PRimagen", columnDefinition = "LONGBLOB")
     private byte[] imagen;
+
+    @Column(name = "PRimagentipo", length = 100)
+    private String imagenTipo;
 
     @Column(name = "PRcreadoen", updatable = false)
     private LocalDateTime creadoEn;
@@ -53,6 +56,7 @@ public class Producto {
         if (this.stock == null) {
             this.stock = 0;
         }
+
         if (this.activo == null) {
             this.activo = true;
         }
@@ -125,6 +129,14 @@ public class Producto {
 
     public void setImagen(byte[] imagen) {
         this.imagen = imagen;
+    }
+
+    public String getImagenTipo() {
+        return imagenTipo;
+    }
+
+    public void setImagenTipo(String imagenTipo) {
+        this.imagenTipo = imagenTipo;
     }
 
     public LocalDateTime getCreadoEn() {

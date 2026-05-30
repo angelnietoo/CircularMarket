@@ -28,6 +28,9 @@ public class Usuario {
     @JoinColumn(name = "RUid")
     private RolUsuario rol;
 
+    @Column(name = "usrol", nullable = false, length = 20)
+    private String usrol;
+
     @Column(name = "UStelefono", length = 30)
     private String telefono;
 
@@ -41,6 +44,18 @@ public class Usuario {
     private LocalDateTime actualizadoEn;
 
     public Usuario() {
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void sincronizarRolTexto() {
+        if (rol != null && rol.getNombre() != null && !rol.getNombre().isBlank()) {
+            this.usrol = rol.getNombre().trim().toUpperCase();
+        }
+
+        if (this.usrol == null || this.usrol.isBlank()) {
+            this.usrol = "USER";
+        }
     }
 
     public Long getId() {
@@ -89,6 +104,18 @@ public class Usuario {
 
     public void setRol(RolUsuario rol) {
         this.rol = rol;
+
+        if (rol != null && rol.getNombre() != null) {
+            this.usrol = rol.getNombre().trim().toUpperCase();
+        }
+    }
+
+    public String getUsrol() {
+        return usrol;
+    }
+
+    public void setUsrol(String usrol) {
+        this.usrol = usrol != null ? usrol.trim().toUpperCase() : null;
     }
 
     public String getTelefono() {

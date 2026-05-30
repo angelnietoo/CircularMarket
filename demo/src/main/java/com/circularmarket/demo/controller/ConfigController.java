@@ -1,8 +1,10 @@
 package com.circularmarket.demo.controller;
 
 import com.circularmarket.demo.model.Usuario;
+import com.circularmarket.demo.service.UsuarioAutenticado;
 import com.circularmarket.demo.service.UsuarioService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +27,12 @@ public class ConfigController {
             return "redirect:/login";
         }
 
-        String email = authentication.getName();
+        String email = obtenerEmailAutenticado(authentication);
+
+        if (email == null || email.isBlank()) {
+            return "redirect:/login";
+        }
+
         Usuario usuarioAutenticado = usuarioService.buscarPorEmail(email);
 
         if (usuarioAutenticado == null) {
@@ -55,7 +62,12 @@ public class ConfigController {
             return "redirect:/login";
         }
 
-        String emailActual = authentication.getName();
+        String emailActual = obtenerEmailAutenticado(authentication);
+
+        if (emailActual == null || emailActual.isBlank()) {
+            return "redirect:/login";
+        }
+
         Usuario usuarioAutenticado = usuarioService.buscarPorEmail(emailActual);
 
         if (usuarioAutenticado == null) {
@@ -72,10 +84,35 @@ public class ConfigController {
 
             redirectAttributes.addFlashAttribute("success", true);
             return "redirect:/configuracion";
+
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("usuario", usuarioForm);
             return "config";
         }
+    }
+
+    private String obtenerEmailAutenticado(Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof UsuarioAutenticado usuarioAutenticado) {
+            return usuarioAutenticado.getUsername();
+        }
+
+        if (principal instanceof OAuth2User oauth2User) {
+            Object email = oauth2User.getAttributes().get("email");
+
+            if (email != null) {
+                return email.toString().trim().toLowerCase();
+            }
+        }
+
+        String name = authentication.getName();
+
+        if (name != null && name.contains("@")) {
+            return name.trim().toLowerCase();
+        }
+
+        return null;
     }
 }

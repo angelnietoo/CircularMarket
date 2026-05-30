@@ -25,6 +25,7 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // Registra un usuario nuevo desde el formulario de registro.
     @Transactional
     public Usuario registrar(RegistroRequest request) {
 
@@ -43,10 +44,14 @@ public class UsuarioService {
         usuario.setNombre(request.getNombre());
         usuario.setApellidos(request.getApellidos());
         usuario.setEmail(email);
+
+        // La contraseña se guarda cifrada, nunca en texto plano.
         usuario.setContrasena(passwordEncoder.encode(request.getPassword()));
+
         usuario.setTelefono(request.getTelefono());
         usuario.setDireccion(request.getDireccion());
 
+        // Todo usuario registrado desde la web empieza con rol USER.
         RolUsuario rolUser = rolUsuarioRepository.findByNombre("USER")
                 .orElseThrow(() -> new IllegalArgumentException("Rol USER no encontrado"));
 
@@ -55,6 +60,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    // Busca un usuario por email.
     public Usuario buscarPorEmail(String email) {
 
         String emailNormalizado = normalizarEmail(email);
@@ -66,6 +72,7 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(emailNormalizado).orElse(null);
     }
 
+    // Busca un usuario por su ID.
     public Usuario buscarPorId(Long id) {
 
         if (id == null) {
@@ -75,6 +82,7 @@ public class UsuarioService {
         return usuarioRepository.findById(id).orElse(null);
     }
 
+    // Actualiza los datos de un usuario existente.
     @Transactional
     public Usuario actualizarUsuario(Long id,
                                      Usuario datosFormulario,
@@ -90,6 +98,7 @@ public class UsuarioService {
             throw new IllegalArgumentException("El email no puede estar vacío.");
         }
 
+        // Si cambia el email, se comprueba que no lo use otro usuario.
         if (!emailNuevo.equalsIgnoreCase(usuario.getEmail())
                 && usuarioRepository.existsByEmail(emailNuevo)) {
 
@@ -102,6 +111,7 @@ public class UsuarioService {
         usuario.setTelefono(datosFormulario.getTelefono());
         usuario.setDireccion(datosFormulario.getDireccion());
 
+        // Solo cambia la contraseña si se escribe una nueva.
         if (passwordNueva != null && !passwordNueva.isBlank()) {
 
             if (!passwordNueva.equals(repetirPassword)) {
@@ -114,6 +124,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    // Crea o edita usuarios desde el panel de administración.
     @Transactional
     public Usuario guardarUsuarioAdmin(Usuario datosFormulario) {
 
@@ -123,6 +134,7 @@ public class UsuarioService {
 
             usuario = new Usuario();
 
+            // Al crear un usuario nuevo, la contraseña es obligatoria.
             if (datosFormulario.getContrasena() == null
                     || datosFormulario.getContrasena().isBlank()) {
 
@@ -141,6 +153,7 @@ public class UsuarioService {
             throw new IllegalArgumentException("El email no puede estar vacío.");
         }
 
+        // Evita emails duplicados entre usuarios.
         if (!email.equalsIgnoreCase(usuario.getEmail())
                 && usuarioRepository.existsByEmail(email)) {
 
@@ -155,6 +168,7 @@ public class UsuarioService {
 
         if (datosFormulario.getRol() != null) {
 
+            // Se carga el rol real desde la base de datos.
             RolUsuario rol = rolUsuarioRepository.findById(
                     datosFormulario.getRol().getId()
             ).orElseThrow(() -> new IllegalArgumentException("Rol no encontrado"));
@@ -163,12 +177,14 @@ public class UsuarioService {
 
         } else {
 
+            // Si no se indica rol, se asigna USER por defecto.
             RolUsuario rolUser = rolUsuarioRepository.findByNombre("USER")
                     .orElseThrow(() -> new IllegalArgumentException("Rol USER no encontrado"));
 
             usuario.setRol(rolUser);
         }
 
+        // Si se escribe contraseña, se actualiza cifrada.
         if (datosFormulario.getContrasena() != null
                 && !datosFormulario.getContrasena().isBlank()) {
 
@@ -180,6 +196,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    // Elimina un usuario por ID.
     @Transactional
     public void eliminarPorId(Long id) {
 
@@ -194,6 +211,7 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
+    // Limpia el email para guardarlo siempre igual.
     private String normalizarEmail(String email) {
 
         if (email == null) {

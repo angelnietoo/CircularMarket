@@ -4,10 +4,10 @@ import com.circularmarket.demo.service.DashboardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-@RequestMapping("/admin")
 public class AdminController {
 
     private final DashboardService dashboardService;
@@ -16,15 +16,27 @@ public class AdminController {
         this.dashboardService = dashboardService;
     }
 
-    @GetMapping
+    @GetMapping("/admin")
     public String dashboard(Model model) {
         model.addAttribute("totalUsuarios", dashboardService.totalUsuarios());
         model.addAttribute("totalAdmins", dashboardService.totalAdmins());
+        model.addAttribute("totalProductos", dashboardService.totalProductos());
+        model.addAttribute("totalPedidos", dashboardService.totalPedidos());
 
-        // Mientras no existan entidades Producto y Pedido, lo dejo en 0
-        model.addAttribute("totalProductos", 0);
-        model.addAttribute("totalPedidos", 0);
+        model.addAttribute("pedidosPendientes", dashboardService.pedidosPendientes());
 
         return "admin/dashboard";
+    }
+
+    @PostMapping("/admin/pedidos/{id}/entregar")
+    public String marcarPedidoComoEntregado(@PathVariable Long id) {
+        dashboardService.marcarPedidoComoEntregado(id);
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/admin/pedidos/{id}/eliminar")
+    public String eliminarPedido(@PathVariable Long id) {
+        dashboardService.eliminarPedido(id);
+        return "redirect:/admin";
     }
 }

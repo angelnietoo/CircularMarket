@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis pedidos | CircularMarket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script th:src="@{/js/fragments/header.js}" defer></script>
+</head>
+
+<body class="bg-slate-50 text-slate-950 font-sans">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="min-h-screen"
+      style="background: radial-gradient(900px 500px at 10% -10%, rgba(21, 81, 193, .06), transparent 60%), radial-gradient(900px 500px at 110% 110%, rgba(21, 81, 193, .06), transparent 60%), #f8fafc;">
+
+    <section class="mx-auto max-w-6xl px-4 py-10">
+
+        <header class="mb-6 rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
+            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">
+                Área de usuario
+            </p>
+
+            <h1 class="mt-2 text-4xl font-extrabold tracking-tight text-slate-900">
+                Mis pedidos
+            </h1>
+
+            <p class="mt-2 text-sm text-slate-500"
+               th:text="${pedidos != null ? #lists.size(pedidos) + ' pedido(s) realizados' : '0 pedidos realizados'}">
+                0 pedidos realizados
+            </p>
+        </header>
+
+        <section th:if="${pedidos == null or #lists.isEmpty(pedidos)}"
+                 class="rounded-[24px] border border-slate-200 bg-white p-10 text-center shadow-sm">
+
+            <div class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-3xl text-blue-700">
+                📦
+            </div>
+
+            <h2 class="text-2xl font-bold text-slate-900">
+                Todavía no tienes pedidos
+            </h2>
+
+            <p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-slate-500">
+                Cuando realices una compra en CircularMarket, tus pedidos aparecerán aquí con su estado y el importe total.
+            </p>
+
+            <a th:href="@{/productos}"
+               class="mt-6 inline-flex items-center justify-center rounded-xl bg-blue-700 px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-800">
+                Ver productos
+            </a>
+        </section>
+
+        <section th:if="${pedidos != null and !#lists.isEmpty(pedidos)}"
+                 class="space-y-4">
+
+            <article th:each="pedido : ${pedidos}"
+                     class="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
+
+                <div class="flex flex-col gap-4 border-b border-slate-100 p-5 sm:flex-row sm:items-center sm:justify-between">
+
+                    <div>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <h2 class="text-xl font-extrabold text-slate-900"
+                                th:text="${'Pedido #' + pedido.id}">
+                                Pedido #1
+                            </h2>
+
+                            <span th:if="${pedido.estado != null and pedido.estado.name() == 'pendiente'}"
+                                  class="inline-flex rounded-full bg-amber-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-amber-700">
+                                Pendiente
+                            </span>
+
+                            <span th:if="${pedido.estado != null and pedido.estado.name() == 'entregado'}"
+                                  class="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-emerald-700">
+                                Entregado
+                            </span>
+
+                            <span th:if="${pedido.estado == null}"
+                                  class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600">
+                                Sin estado
+                            </span>
+                        </div>
+
+                        <p class="mt-2 text-sm text-slate-500"
+                           th:text="${pedido.fechaPedido != null ? 'Realizado el ' + #temporals.format(pedido.fechaPedido, 'dd/MM/yyyy HH:mm') : 'Fecha no disponible'}">
+                            Realizado el 26/05/2026 12:00
+                        </p>
+                    </div>
+
+                    <div class="text-left sm:text-right">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                            Total
+                        </p>
+
+                        <strong class="mt-1 block text-2xl font-extrabold text-slate-900"
+                                th:text="${pedido.importeTotal != null ? #numbers.formatDecimal(pedido.importeTotal, 1, 'POINT', 2, 'COMMA') + ' €' : '0,00 €'}">
+                            0,00 €
+                        </strong>
+                    </div>
+
+                </div>
+
+                <div class="grid gap-4 p-5 sm:grid-cols-3">
+
+                    <div class="rounded-2xl bg-slate-50 p-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                            Número de pedido
+                        </p>
+
+                        <p class="mt-1 text-sm font-bold text-slate-900"
+                           th:text="${'#' + pedido.id}">
+                            #1
+                        </p>
+                    </div>
+
+                    <div class="rounded-2xl bg-slate-50 p-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                            Estado del pedido
+                        </p>
+
+                        <p class="mt-1 text-sm font-bold text-slate-900"
+                           th:if="${pedido.estado != null and pedido.estado.name() == 'pendiente'}">
+                            Pendiente de entrega
+                        </p>
+
+                        <p class="mt-1 text-sm font-bold text-slate-900"
+                           th:if="${pedido.estado != null and pedido.estado.name() == 'entregado'}">
+                            Entregado
+                        </p>
+
+                        <p class="mt-1 text-sm font-bold text-slate-900"
+                           th:if="${pedido.estado == null}">
+                            Sin estado
+                        </p>
+                    </div>
+
+                    <div class="rounded-2xl bg-slate-50 p-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                            Pago
+                        </p>
+
+                        <p class="mt-1 text-sm font-bold text-emerald-700">
+                            Pagado
+                        </p>
+                    </div>
+
+                </div>
+
+            </article>
+
+        </section>
+
+    </section>
+
+</main>
+
+</body>
+</html>

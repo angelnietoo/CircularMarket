@@ -1,13 +1,19 @@
 package com.circularmarket.demo.controller;
 
-import com.circularmarket.demo.model.RolUsuario;
 import com.circularmarket.demo.model.Usuario;
 import com.circularmarket.demo.repository.RolUsuarioRepository;
 import com.circularmarket.demo.repository.UsuarioRepository;
 import com.circularmarket.demo.service.UsuarioService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Controller
 @RequestMapping("/admin/usuarios")
@@ -26,8 +32,25 @@ public class AdminUsuarioController {
     }
 
     @GetMapping
-    public String listarUsuarios(Model model) {
-        model.addAttribute("usuarios", usuarioRepository.findAll());
+    public String listarUsuarios(
+            @RequestParam(name = "q", required = false) String q,
+            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model) {
+
+        String busqueda = q != null ? q.trim() : "";
+
+        Page<Usuario> paginaUsuarios;
+
+        if (busqueda.isBlank()) {
+            paginaUsuarios = usuarioRepository.findAll(pageable);
+        } else {
+            paginaUsuarios = usuarioRepository.buscarUsuarios(busqueda, pageable);
+        }
+
+        model.addAttribute("usuarios", paginaUsuarios.getContent());
+        model.addAttribute("paginaUsuarios", paginaUsuarios);
+        model.addAttribute("q", busqueda);
+
         return "admin/usuarios-lista";
     }
 
@@ -35,6 +58,7 @@ public class AdminUsuarioController {
     public String nuevoUsuario(Model model) {
         model.addAttribute("usuario", new Usuario());
         model.addAttribute("roles", rolUsuarioRepository.findAll());
+
         return "admin/usuarios-formulario";
     }
 
@@ -48,6 +72,7 @@ public class AdminUsuarioController {
 
         model.addAttribute("usuario", usuario);
         model.addAttribute("roles", rolUsuarioRepository.findAll());
+
         return "admin/usuarios-formulario";
     }
 
@@ -65,8 +90,20 @@ public class AdminUsuarioController {
     }
 
     @PostMapping("/{id}/eliminar")
-    public String eliminarUsuario(@PathVariable Long id) {
+    public String eliminarUsuario(@PathVariable Long id,
+                                  @RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(name = "q", required = false) String q) {
+
         usuarioService.eliminarPorId(id);
-        return "redirect:/admin/usuarios";
+
+        String busqueda = q != null ? q.trim() : "";
+
+        if (busqueda.isBlank()) {
+            return "redirect:/admin/usuarios?page=" + page;
+        }
+
+        String qCodificada = URLEncoder.encode(busqueda, StandardCharsets.UTF_8);
+
+        return "redirect:/admin/usuarios?page=" + page + "&q=" + qCodificada;
     }
 }

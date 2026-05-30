@@ -4,9 +4,16 @@ import com.circularmarket.demo.model.Categoria;
 import com.circularmarket.demo.model.Producto;
 import com.circularmarket.demo.repository.CategoriaRepository;
 import com.circularmarket.demo.repository.ProductoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/admin/productos")
@@ -22,8 +29,15 @@ public class AdminProductoController {
     }
 
     @GetMapping
-    public String listarProductos(Model model) {
-        model.addAttribute("productos", productoRepository.findAll());
+    public String listarProductos(
+            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model) {
+
+        Page<Producto> paginaProductos = productoRepository.findAll(pageable);
+
+        model.addAttribute("productos", paginaProductos.getContent());
+        model.addAttribute("paginaProductos", paginaProductos);
+
         return "admin/productos-lista";
     }
 
@@ -52,7 +66,8 @@ public class AdminProductoController {
     @PostMapping("/guardar")
     public String guardarProducto(@ModelAttribute("producto") Producto formProducto,
                                   @RequestParam(value = "categoriaId", required = false) Long categoriaId,
-                                  Model model) {
+                                  @RequestParam(value = "imagenArchivo", required = false) MultipartFile imagenArchivo,
+                                  Model model) throws IOException {
 
         if (categoriaId == null) {
             model.addAttribute("error", "Debes seleccionar una categoría.");
@@ -80,14 +95,20 @@ public class AdminProductoController {
         producto.setActivo(formProducto.getActivo() != null ? formProducto.getActivo() : false);
         producto.setCategoria(categoria);
 
+        if (imagenArchivo != null && !imagenArchivo.isEmpty()) {
+            producto.setImagen(imagenArchivo.getBytes());
+            producto.setImagenTipo(imagenArchivo.getContentType());
+        }
+
         productoRepository.save(producto);
 
         return "redirect:/admin/productos";
     }
 
     @PostMapping("/{id}/eliminar")
-    public String eliminarProducto(@PathVariable Long id) {
+    public String eliminarProducto(@PathVariable Long id,
+                                   @RequestParam(defaultValue = "0") int page) {
         productoRepository.deleteById(id);
-        return "redirect:/admin/productos";
+        return "redirect:/admin/productos?page=" + page;
     }
 }

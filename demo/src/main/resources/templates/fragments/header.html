@@ -8,48 +8,80 @@
                 shadow-[0_2px_10px_rgba(31,41,55,0.04)]
                 flex-nowrap sm:px-3.5">
 
-        <div class="shrink-0 text-xl font-extrabold tracking-tight whitespace-nowrap leading-none sm:text-lg">
-            <span class="text-gray-800">Circular</span><span class="text-blue-600">Market</span>
-        </div>
+        <button type="button"
+                onclick="toggleCategoriasMenu()"
+                class="relative z-[1700] inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-300 bg-white text-gray-800 shadow-sm transition hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
+                aria-label="Abrir menú de categorías"
+                aria-controls="headerCategoriasMenu"
+                aria-expanded="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="h-6 w-6 fill-current">
+                <path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"/>
+            </svg>
+        </button>
 
-        <form class="absolute left-1/2 top-1/2 flex w-full max-w-[520px] min-w-0 -translate-x-1/2 -translate-y-1/2 justify-center"
+        <a th:href="@{/inicio}"
+           class="relative z-[1700] shrink-0 text-xl font-extrabold tracking-tight whitespace-nowrap leading-none sm:text-lg no-underline">
+            <span class="text-gray-800">Circular</span><span class="text-blue-600">Market</span>
+        </a>
+
+        <form class="absolute left-1/2 top-1/2 z-[1600] w-full max-w-[520px] min-w-0 -translate-x-1/2 -translate-y-1/2"
               th:action="@{/productos}"
               method="get">
-            <div class="flex w-full max-w-[520px] min-w-0 h-9 border border-gray-300 rounded-lg overflow-hidden bg-white box-border transition-colors duration-200 ease-in-out focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100/25 sm:h-[36px] sm:rounded-lg">
-                <input type="text"
-                       name="q"
-                       th:value="${busqueda}"
-                       placeholder="Buscar productos..."
-                       maxlength="60"
-                       pattern="[A-Za-zÁÉÍÓÚáéíóúÑñÜü0-9 .,\-]+"
-                       autocomplete="off"
-                       class="flex-1 border-0 outline-none bg-transparent text-gray-800 text-sm h-full px-3.5 min-w-0 box-border placeholder-gray-400 focus:shadow-none sm:text-sm sm:px-3">
+            <div class="relative w-full">
+                <div class="flex w-full max-w-[520px] min-w-0 h-9 border border-gray-300 rounded-lg overflow-hidden bg-white box-border transition-colors duration-200 ease-in-out focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100/25 sm:h-[36px] sm:rounded-lg">
+                    <input type="text"
+                           id="buscadorHeader"
+                           name="q"
+                           th:value="${busqueda}"
+                           placeholder="Buscar productos..."
+                           maxlength="60"
+                           pattern="[A-Za-zÁÉÍÓÚáéíóúÑñÜü0-9 .,\-]+"
+                           autocomplete="off"
+                           class="flex-1 border-0 outline-none bg-transparent text-gray-800 text-sm h-full px-3.5 min-w-0 box-border placeholder-gray-400 focus:shadow-none sm:text-sm sm:px-3">
 
-                <button type="submit"
-                        class="w-[46px] min-w-[46px] h-full border-0 bg-blue-600 text-white cursor-pointer inline-flex items-center justify-center transition-colors duration-200 ease-in-out hover:bg-blue-700 sm:w-[42px] sm:min-w-[42px]"
-                        aria-label="Buscar productos"
-                        title="Buscar productos">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" class="w-4.5 h-4.5 block fill-current sm:w-4 sm:h-4">
-                        <path d="M10 4a6 6 0 104.472 10.028l4.75 4.75 1.414-1.414-4.75-4.75A6 6 0 0010 4zm0 2a4 4 0 110 8 4 4 0 010-8z"/>
-                    </svg>
-                </button>
+                    <button type="submit"
+                            class="w-[46px] min-w-[46px] h-full border-0 bg-blue-600 text-white cursor-pointer inline-flex items-center justify-center transition-colors duration-200 ease-in-out hover:bg-blue-700 sm:w-[42px] sm:min-w-[42px]"
+                            aria-label="Buscar productos"
+                            title="Buscar productos">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" class="w-4.5 h-4.5 block fill-current sm:w-4 sm:h-4">
+                            <path d="M10 4a6 6 0 104.472 10.028l4.75 4.75 1.414-1.414-4.75-4.75A6 6 0 0010 4zm0 2a4 4 0 110 8 4 4 0 010-8z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div id="busquedasRecientes"
+                     class="absolute left-0 right-0 top-full z-[1700] mt-2 hidden overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl">
+                </div>
             </div>
         </form>
 
-        <div class="shrink-0 ml-auto flex items-center gap-3.5 sm:gap-2.5">
+        <div class="relative z-[1700] shrink-0 ml-auto flex items-center gap-3.5 sm:gap-2.5">
             <a th:href="@{/productos}"
                class="text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600">
                 Productos
             </a>
 
-            <a th:href="@{/carrito}"
-               class="text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600">
-                Carrito
-            </a>
-
             <a th:href="@{/pedidos}"
                class="text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600">
                 Pedidos
+            </a>
+
+            <a th:href="@{/carrito}"
+               class="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-300 bg-white text-gray-800 shadow-sm transition hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
+               aria-label="Ir al carrito"
+               title="Carrito">
+
+                <svg viewBox="0 0 24 24"
+                     aria-hidden="true"
+                     class="h-5 w-5 fill-current">
+                    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2zM7.2 14.8h7.45c.75 0 1.41-.41 1.75-1.03L20 7.24A1 1 0 0019.12 5H6.21L5.27 3H2v2h2l3.6 7.59-1.35 2.44C5.52 16.37 6.48 18 8 18h11v-2H8l1.1-2zM7.16 7h10.26l-2.76 5H9.53L7.16 7z"/>
+                </svg>
+
+                <span th:if="${carritoCantidad != null and carritoCantidad > 0}"
+                      th:text="${carritoCantidad > 99 ? '99+' : carritoCantidad}"
+                      class="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-600 px-1.5 text-[11px] font-extrabold leading-none text-white shadow-md ring-2 ring-white">
+                    1
+                </span>
             </a>
 
             <a th:href="@{/admin}"
@@ -68,14 +100,14 @@
                     <span class="flex flex-col items-start gap-[3px] whitespace-nowrap">
                         <span class="text-xs font-semibold text-gray-500 leading-none sm:text-xs">
                             Bienvenido,
-                            <span th:text="${usuarioNombre != null ? usuarioNombre : 'Usuario'}">Usuario</span>
+                            <span th:text="${@usuarioSesion.obtenerNombre(#authentication)}">Usuario</span>
                         </span>
                         <span class="text-sm font-extrabold text-gray-800 leading-none sm:text-sm">Cuenta ▾</span>
                     </span>
                 </button>
 
                 <div id="headerCuentaMenu"
-                     class="absolute top-full right-0 min-w-52 bg-white border border-gray-300 rounded-2xl shadow-xl p-2 hidden z-50 sm:right-0 sm:left-auto">
+                     class="absolute top-full right-0 min-w-52 bg-white border border-gray-300 rounded-2xl shadow-xl p-2 hidden z-[1800] sm:right-0 sm:left-auto">
 
                     <a th:href="@{/configuracion}"
                        class="block p-2.5 px-3 rounded-xl text-gray-800 no-underline font-semibold text-sm transition-colors duration-200 ease-in-out hover:bg-blue-50 hover:text-blue-800">
@@ -93,19 +125,52 @@
         </div>
     </div>
 
-    <nav class="bg-white/82 backdrop-blur-lg h-[32px] px-7 flex justify-center flex-wrap gap-0 border-b border-gray-300 sm:h-[32px] sm:px-3.5 sm:gap-0">
+    <div id="buscadorOverlay"
+         class="fixed inset-0 z-[900] hidden bg-black/35"></div>
 
-        <a th:each="categoria : ${categoriasHeader}"
-           th:href="@{/categoria/{id}(id=${categoria.id})}"
-           th:text="${categoria.nombre}"
-           class="h-full text-gray-500 no-underline text-sm font-semibold px-3.5 rounded-none leading-tight inline-flex items-center justify-center transition-colors duration-200 ease-in-out hover:bg-blue-600 hover:text-white m-0 sm:text-sm sm:px-3">
-            Categoría
-        </a>
+    <div id="categoriasOverlay"
+         onclick="cerrarCategoriasMenu()"
+         class="fixed inset-0 z-[1100] hidden bg-black/35"></div>
 
-        <a th:href="@{/ofertas}"
-           class="h-full text-gray-500 no-underline text-sm font-semibold px-3.5 rounded-none leading-tight inline-flex items-center justify-center transition-colors duration-200 ease-in-out hover:bg-blue-600 hover:text-white m-0 sm:text-sm sm:px-3">
-            Ofertas
-        </a>
+    <aside id="headerCategoriasMenu"
+           class="fixed left-0 top-0 z-[1200] h-screen w-[240px] max-w-[80vw] -translate-x-full border-r border-slate-200 bg-white shadow-2xl transition-transform duration-300 ease-in-out">
 
-    </nav>
+        <div class="flex h-[60px] items-center justify-between border-b border-slate-200 bg-slate-50 px-4">
+            <div>
+                <p class="text-base font-extrabold text-slate-900">
+                    Categorías
+                </p>
+                <p class="text-xs text-slate-500">
+                    Filtra productos
+                </p>
+            </div>
+
+            <button type="button"
+                    onclick="cerrarCategoriasMenu()"
+                    class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-300 bg-white text-slate-700 transition hover:bg-slate-100"
+                    aria-label="Cerrar menú de categorías">
+                ✕
+            </button>
+        </div>
+
+        <nav class="h-[calc(100vh-60px)] overflow-y-auto p-2">
+
+            <a th:href="@{/productos}"
+               th:classappend="${categoriaSeleccionadaId == null} ? 'bg-blue-600 text-white hover:bg-blue-600 hover:text-white' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700'"
+               class="block rounded-lg px-3 py-2 text-sm font-bold transition">
+                Todas las categorías
+            </a>
+
+            <a th:each="categoria : ${categoriasHeader}"
+               th:href="@{/productos(categoriaId=${categoria.id})}"
+               th:text="${categoria.nombre}"
+               th:classappend="${categoriaSeleccionadaId != null and categoria.id == categoriaSeleccionadaId} ? 'bg-blue-600 text-white hover:bg-blue-600 hover:text-white' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700'"
+               class="block rounded-lg px-3 py-2 text-sm font-bold transition">
+                Categoría
+            </a>
+
+        </nav>
+
+    </aside>
+
 </header>

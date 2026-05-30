@@ -13,6 +13,8 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
     List<Producto> findByActivoTrueOrderByCreadoEnDesc();
 
+    List<Producto> findByCategoria_IdAndActivoTrueOrderByCreadoEnDesc(Long categoriaId);
+
     List<Producto> findTop4ByCategoria_IdAndActivoTrueOrderByCreadoEnDesc(Long categoriaId);
 
     @Query("""

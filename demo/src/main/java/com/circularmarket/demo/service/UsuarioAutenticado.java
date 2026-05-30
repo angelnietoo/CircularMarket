@@ -30,10 +30,6 @@ public class UsuarioAutenticado implements UserDetails {
         this.authorities = authorities;
     }
 
-    // ========================
-    // DATOS PERSONALIZADOS
-    // ========================
-
     public Long getId() {
         return id;
     }
@@ -53,10 +49,6 @@ public class UsuarioAutenticado implements UserDetails {
         return nombre + " " + apellidos;
     }
 
-    // ========================
-    // MÉTODOS DE SPRING SECURITY
-    // ========================
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
@@ -67,7 +59,6 @@ public class UsuarioAutenticado implements UserDetails {
         return password;
     }
 
-    // Esto es lo que Spring considera "username"
     @Override
     public String getUsername() {
         return email;

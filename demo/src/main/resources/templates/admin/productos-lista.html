@@ -48,6 +48,7 @@
                         <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">Precio</th>
                         <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">Stock</th>
                         <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">Categoría</th>
+                        <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">Imagen</th>
                         <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">Estado</th>
                         <th class="px-5 py-2 text-center text-sm font-semibold text-slate-700">Acciones</th>
                     </tr>
@@ -55,19 +56,47 @@
 
                     <tbody class="divide-y divide-slate-200 bg-white">
                     <tr th:if="${productos == null or #lists.isEmpty(productos)}">
-                        <td colspan="7" class="px-5 py-6 text-center text-sm text-slate-500">
+                        <td colspan="8" class="px-5 py-6 text-center text-sm text-slate-500">
                             No hay productos registrados.
                         </td>
                     </tr>
 
                     <tr th:each="producto : ${productos}" class="hover:bg-slate-50">
-                        <td class="px-5 py-2 text-sm font-medium text-slate-900" th:text="${producto.id}">1</td>
-                        <td class="px-5 py-2 text-sm text-slate-700" th:text="${producto.titulo}">Nombre</td>
-                        <td class="px-5 py-2 text-sm text-slate-700" th:text="${producto.precio} + ' €'">0 €</td>
-                        <td class="px-5 py-2 text-sm text-slate-700" th:text="${producto.stock}">0</td>
+                        <td class="px-5 py-2 text-sm font-medium text-slate-900"
+                            th:text="${producto.id}">
+                            1
+                        </td>
+
+                        <td class="px-5 py-2 text-sm text-slate-700"
+                            th:text="${producto.titulo}">
+                            Nombre
+                        </td>
+
+                        <td class="px-5 py-2 text-sm text-slate-700"
+                            th:text="${producto.precio} + ' €'">
+                            0 €
+                        </td>
+
+                        <td class="px-5 py-2 text-sm text-slate-700"
+                            th:text="${producto.stock}">
+                            0
+                        </td>
+
                         <td class="px-5 py-2 text-sm text-slate-700"
                             th:text="${producto.categoria != null ? producto.categoria.nombre : 'Sin categoría'}">
                             Sin categoría
+                        </td>
+
+                        <td class="px-5 py-2 text-sm text-slate-700">
+                            <span th:if="${producto.imagenTipo != null and !producto.imagenTipo.isBlank()}"
+                                  class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Activa
+                            </span>
+
+                            <span th:unless="${producto.imagenTipo != null and !producto.imagenTipo.isBlank()}"
+                                  class="inline-flex items-center rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-700">
+                                Inactiva
+                            </span>
                         </td>
 
                         <td class="px-5 py-2 text-sm text-slate-700">
@@ -75,6 +104,7 @@
                                   class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
                                 Activo
                             </span>
+
                             <span th:unless="${producto.activo}"
                                   class="inline-flex items-center rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-700">
                                 Inactivo
@@ -83,14 +113,20 @@
 
                         <td class="px-5 py-2">
                             <div class="flex justify-end gap-2">
-                                <a class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
-                                   th:href="@{'/admin/productos/' + ${producto.id} + '/editar'}">
+                                <a th:href="@{/admin/productos/{id}/editar(id=${producto.id})}"
+                                   class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
                                     Editar
                                 </a>
 
-                                <form th:action="@{'/admin/productos/' + ${producto.id} + '/eliminar'}"
+                                <form th:action="@{/admin/productos/{id}/eliminar(id=${producto.id}, page=${paginaProductos != null ? paginaProductos.number : 0})}"
                                       method="post"
                                       onsubmit="return confirm('¿Seguro que quieres eliminar este producto?');">
+
+                                    <input type="hidden"
+                                           th:if="${_csrf != null}"
+                                           th:name="${_csrf.parameterName}"
+                                           th:value="${_csrf.token}" />
+
                                     <button type="submit"
                                             class="inline-flex items-center justify-center rounded-xl bg-rose-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-rose-700">
                                         Eliminar
@@ -103,15 +139,61 @@
                 </table>
             </div>
 
-            <div class="p-5 text-center text-slate-600" th:if="${productos == null or #lists.isEmpty(productos)}">
+            <div class="p-5 text-center text-slate-600"
+                 th:if="${productos == null or #lists.isEmpty(productos)}">
                 <p class="mb-4">No hay productos registrados.</p>
-                <a class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
-                   th:href="@{/admin/productos/nuevo}">
+
+                <a th:href="@{/admin/productos/nuevo}"
+                   class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700">
                     Crear primer producto
                 </a>
+            </div>
+
+            <div class="flex flex-col gap-4 border-t border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
+                 th:if="${paginaProductos != null and paginaProductos.totalPages > 1}">
+
+                <p class="text-sm text-slate-500">
+                    Página
+                    <span class="font-semibold text-slate-900" th:text="${paginaProductos.number + 1}">1</span>
+                    de
+                    <span class="font-semibold text-slate-900" th:text="${paginaProductos.totalPages}">1</span>
+                </p>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <a th:if="${paginaProductos.hasPrevious()}"
+                       th:href="@{/admin/productos(page=${paginaProductos.number - 1})}"
+                       class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+                        Anterior
+                    </a>
+
+                    <span th:unless="${paginaProductos.hasPrevious()}"
+                          class="cursor-not-allowed rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-400">
+                        Anterior
+                    </span>
+
+                    <a th:each="i : ${#numbers.sequence(0, paginaProductos.totalPages - 1)}"
+                       th:href="@{/admin/productos(page=${i})}"
+                       th:text="${i + 1}"
+                       th:classappend="${i == paginaProductos.number} ? ' bg-blue-600 text-white border-blue-600' : ' bg-white text-slate-700 border-slate-200 hover:bg-slate-100'"
+                       class="rounded-xl border px-3 py-2 text-sm font-semibold">
+                        1
+                    </a>
+
+                    <a th:if="${paginaProductos.hasNext()}"
+                       th:href="@{/admin/productos(page=${paginaProductos.number + 1})}"
+                       class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+                        Siguiente
+                    </a>
+
+                    <span th:unless="${paginaProductos.hasNext()}"
+                          class="cursor-not-allowed rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-400">
+                        Siguiente
+                    </span>
+                </div>
             </div>
         </section>
     </main>
 </div>
+
 </body>
 </html>

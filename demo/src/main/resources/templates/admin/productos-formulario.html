@@ -38,6 +38,7 @@
         <form th:object="${producto}"
               th:action="@{/admin/productos/guardar}"
               method="post"
+              enctype="multipart/form-data"
               class="space-y-6 p-6">
 
             <input type="hidden" th:field="*{id}" />
@@ -91,15 +92,19 @@
                 </div>
 
                 <div class="space-y-2">
-                    <label for="imagen" class="block text-sm font-semibold text-slate-700">Imagen</label>
-                    <input type="text"
-                           id="imagen"
-                           th:field="*{imagen}"
-                           placeholder="URL de la imagen"
+                    <label for="imagenArchivo" class="block text-sm font-semibold text-slate-700">Imagen</label>
+                    <input type="file"
+                           id="imagenArchivo"
+                           name="imagenArchivo"
+                           accept="image/*"
                            class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-100" />
-                    <small th:if="${#fields.hasErrors('imagen')}"
-                           th:errors="*{imagen}"
-                           class="block rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700"></small>
+
+                    <div th:if="${producto.id != null and producto.imagen != null}"
+                         class="mt-3 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
+                        <img th:src="@{/productos/{id}/imagen(id=${producto.id})}"
+                             alt="Imagen actual del producto"
+                             class="h-40 w-full object-cover">
+                    </div>
                 </div>
 
                 <div class="md:col-span-2 space-y-2">

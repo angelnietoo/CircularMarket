@@ -4,6 +4,10 @@ import com.circularmarket.demo.model.Categoria;
 import com.circularmarket.demo.repository.CategoriaRepository;
 import com.circularmarket.demo.repository.ProductoRepository;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +26,12 @@ public class AdminCategoriaController {
     }
 
     @GetMapping
-    public String listarCategorias(Model model) {
-        model.addAttribute("categorias", categoriaRepository.findAll());
+    public String listarCategorias(
+            @PageableDefault(size = 20, sort = "nombre", direction = Sort.Direction.ASC) Pageable pageable,
+            Model model) {
+
+        cargarCategoriasPaginadas(model, pageable);
+
         return "admin/categorias-lista";
     }
 
@@ -37,7 +45,9 @@ public class AdminCategoriaController {
     public String editarCategoria(@PathVariable Long id, Model model) {
         Categoria categoria = categoriaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
+
         model.addAttribute("categoria", categoria);
+
         return "admin/categorias-formulario";
     }
 
@@ -81,6 +91,7 @@ public class AdminCategoriaController {
             categoria.setActiva(categoriaForm.isActiva());
 
             categoriaRepository.save(categoria);
+
             return "redirect:/admin/categorias";
         } catch (DataIntegrityViolationException ex) {
             model.addAttribute("categoria", categoriaForm);
@@ -90,20 +101,32 @@ public class AdminCategoriaController {
     }
 
     @PostMapping("/{id}/eliminar")
-    public String eliminarCategoria(@PathVariable Long id, Model model) {
+    public String eliminarCategoria(
+            @PathVariable Long id,
+            @PageableDefault(size = 20, sort = "nombre", direction = Sort.Direction.ASC) Pageable pageable,
+            Model model) {
+
         try {
             if (productoRepository.existsByCategoria_Id(id)) {
-                model.addAttribute("categorias", categoriaRepository.findAll());
+                cargarCategoriasPaginadas(model, pageable);
                 model.addAttribute("error", "No se puede eliminar la categoría porque tiene productos asociados.");
                 return "admin/categorias-lista";
             }
 
             categoriaRepository.deleteById(id);
-            return "redirect:/admin/categorias";
+
+            return "redirect:/admin/categorias?page=" + pageable.getPageNumber();
         } catch (DataIntegrityViolationException ex) {
-            model.addAttribute("categorias", categoriaRepository.findAll());
+            cargarCategoriasPaginadas(model, pageable);
             model.addAttribute("error", "No se puede eliminar la categoría porque tiene productos asociados.");
             return "admin/categorias-lista";
         }
+    }
+
+    private void cargarCategoriasPaginadas(Model model, Pageable pageable) {
+        Page<Categoria> paginaCategorias = categoriaRepository.findAll(pageable);
+
+        model.addAttribute("categorias", paginaCategorias.getContent());
+        model.addAttribute("paginaCategorias", paginaCategorias);
     }
 }

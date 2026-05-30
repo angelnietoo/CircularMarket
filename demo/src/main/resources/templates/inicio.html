@@ -57,7 +57,7 @@
     </section>
 
     <section th:if="${productosPorCategoria == null or productosPorCategoria.isEmpty()}"
-             class="rounded-[20px] border border-slate-200 bg-white p-8 text-center shadow">
+             class="rounded-[18px] border border-slate-200 bg-white p-8 text-center shadow">
         <h2 class="text-xl font-bold text-slate-900">
             No hay productos disponibles
         </h2>
@@ -82,23 +82,24 @@
                 </p>
             </div>
 
-            <a th:href="@{/categoria/{id}(id=${entrada.key.id})}"
+            <a th:href="@{/productos(categoriaId=${entrada.key.id})}"
                class="text-sm font-bold text-blue-600 hover:text-blue-800">
                 Ver categoría
             </a>
         </div>
 
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
 
             <article th:each="producto : ${entrada.value}"
-                     class="group overflow-hidden rounded-[20px] border border-slate-200 bg-white shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-2xl">
+                     th:onclick="|window.location.href='@{/productos/{id}(id=${producto.id})}'|"
+                     class="group cursor-pointer overflow-hidden rounded-[16px] border border-slate-200 bg-white shadow-md">
 
-                <div class="relative h-[190px] overflow-hidden bg-gradient-to-b from-slate-100 to-slate-50">
+                <div class="relative h-[200px] overflow-hidden bg-gradient-to-b from-slate-100 to-slate-50">
 
                     <img th:if="${producto.imagen != null}"
-                         th:src="@{/productos/imagen/{id}(id=${producto.id})}"
+                         th:src="@{/productos/{id}/imagen(id=${producto.id})}"
                          alt="Imagen del producto"
-                         class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
+                         class="h-full w-full object-cover">
 
                     <div th:if="${producto.imagen == null}"
                          class="flex h-full w-full items-center justify-center text-sm font-semibold text-slate-400">
@@ -106,18 +107,18 @@
                     </div>
                 </div>
 
-                <div class="p-5">
+                <div class="p-4">
                     <h4 th:text="${producto.titulo}"
-                        class="mb-2 line-clamp-2 text-lg font-extrabold text-slate-900">
+                        class="mb-2 line-clamp-2 text-base font-extrabold text-slate-900 group-hover:text-yellow-500">
                         Nombre del producto
                     </h4>
 
                     <p th:text="${producto.descripcion}"
-                       class="mb-4 line-clamp-3 min-h-[50px] text-sm leading-6 text-slate-500">
+                       class="mb-3 line-clamp-3 min-h-[44px] text-sm leading-5 text-slate-500">
                         Descripción del producto
                     </p>
 
-                    <div class="flex flex-col gap-3 border-t border-slate-200 pt-4">
+                    <div class="flex flex-col gap-3 border-t border-slate-200 pt-3">
                         <div class="flex items-center justify-between gap-3">
                             <span th:text="${#numbers.formatDecimal(producto.precio, 1, 2)} + ' €'"
                                   class="text-base font-extrabold text-slate-900">
@@ -125,15 +126,10 @@
                             </span>
 
                             <span th:text="'Stock: ' + ${producto.stock}"
-                                  class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                                  class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">
                                 Stock
                             </span>
                         </div>
-
-                        <a th:href="@{/productos/{id}(id=${producto.id})}"
-                           class="inline-flex w-full justify-center rounded-full border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-slate-200">
-                            Ver producto
-                        </a>
                     </div>
                 </div>
 

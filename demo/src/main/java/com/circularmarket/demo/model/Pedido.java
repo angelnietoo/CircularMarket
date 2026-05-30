@@ -16,7 +16,7 @@ public class Pedido {
     @Column(name = "PEcompradorid", nullable = false)
     private Integer compradorId;
 
-    @Column(name = "PEdireccionenvioid", nullable = false)
+    @Column(name = "PEdireccionenvioid")
     private Integer direccionEnvioId;
 
     @Column(name = "PEimportetotal", nullable = false, precision = 12, scale = 2)
@@ -33,6 +33,17 @@ public class Pedido {
     private LocalDateTime actualizadoEn;
 
     public Pedido() {
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.estado == null) {
+            this.estado = EstadoPedido.pendiente;
+        }
+
+        if (this.importeTotal == null) {
+            this.importeTotal = BigDecimal.ZERO;
+        }
     }
 
     public Long getId() {

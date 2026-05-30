@@ -1,5 +1,6 @@
 package com.circularmarket.demo.config;
 
+import com.circularmarket.demo.service.OAuth2UsuarioService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -28,7 +29,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                   DaoAuthenticationProvider authenticationProvider) throws Exception {
+                                                   DaoAuthenticationProvider authenticationProvider,
+                                                   OAuth2UsuarioService oAuth2UsuarioService) throws Exception {
+
         http.authenticationProvider(authenticationProvider);
 
         http.authorizeHttpRequests(auth -> auth
@@ -38,10 +41,15 @@ public class SecurityConfig {
                         "/registro",
                         "/inicio",
                         "/buscar",
+                        "/productos",
+                        "/producto/**",
                         "/css/**",
                         "/js/**",
                         "/images/**",
-                        "/favicon.ico"
+                        "/img/**",
+                        "/favicon.ico",
+                        "/oauth2/**",
+                        "/login/oauth2/**"
                 ).permitAll()
 
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
@@ -55,6 +63,12 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/inicio", true)
                 .failureUrl("/login?error=1")
                 .permitAll()
+        );
+
+        http.oauth2Login(oauth2 -> oauth2
+                .loginPage("/login")
+                .successHandler(oAuth2UsuarioService)
+                .failureUrl("/login?error=google")
         );
 
         http.logout(logout -> logout

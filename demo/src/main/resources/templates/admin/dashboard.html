@@ -1,74 +1,275 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Panel de administración | CircularMarket</title>
+    <meta charset="UTF-8">
+    <title>Dashboard | CircularMarket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen bg-slate-100 text-slate-900 antialiased">
-<div class="flex min-h-screen flex-col lg:flex-row">
+
+<div class="flex min-h-screen">
 
     <aside th:replace="~{fragments/sidebar-admin :: sidebar}"></aside>
 
     <main class="flex-1 min-w-0">
         <div class="mx-auto max-w-7xl p-6 lg:p-8">
 
-            <header class="mb-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <header class="mb-5 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <p class="text-sm font-medium uppercase tracking-[0.2em] text-blue-600">Resumen general</p>
-                        <h2 class="mt-2 text-3xl font-bold tracking-tight text-slate-900">Dashboard</h2>
-                        <p class="mt-2 text-sm text-slate-500">Visión general del estado de la aplicación</p>
+                        <p class="text-xs font-medium uppercase tracking-[0.2em] text-blue-600">
+                            Resumen general
+                        </p>
+
+                        <h1 class="mt-1.5 text-3xl font-bold tracking-tight text-slate-900">
+                            Dashboard
+                        </h1>
+
+                        <p class="mt-1.5 text-sm text-slate-500">
+                            Visión general del estado de CircularMarket.
+                        </p>
                     </div>
                 </div>
             </header>
 
-            <section class="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-                <article class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
-                    <div class="mb-4 flex items-center justify-between">
-                        <span class="text-sm font-medium text-slate-500">Usuarios</span>
-                        <span class="h-2.5 w-2.5 rounded-full bg-blue-600"></span>
+            <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+
+                <article class="rounded-2xl border border-slate-200 bg-white px-5 py-3 shadow-sm transition hover:shadow-md">
+                    <div class="mb-2 flex items-center justify-between">
+                        <span class="text-sm font-medium text-slate-500">
+                            Usuarios
+                        </span>
+
+                        <span class="h-2 w-2 rounded-full bg-blue-600"></span>
                     </div>
-                    <strong class="block text-4xl font-bold tracking-tight text-slate-900"
-                            th:text="${totalUsuarios != null ? totalUsuarios : 0}">0</strong>
-                    <span class="mt-2 block text-sm text-slate-500">Registrados en la plataforma</span>
+
+                    <strong class="block text-2xl font-bold tracking-tight text-slate-900"
+                            th:text="${totalUsuarios != null ? totalUsuarios : 0}">
+                        0
+                    </strong>
+
+                    <span class="mt-1 block text-xs text-slate-500">
+                        Registrados en la plataforma
+                    </span>
                 </article>
 
-                <article class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
-                    <div class="mb-4 flex items-center justify-between">
-                        <span class="text-sm font-medium text-slate-500">Administradores</span>
-                        <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                <article class="rounded-2xl border border-slate-200 bg-white px-5 py-3 shadow-sm transition hover:shadow-md">
+                    <div class="mb-2 flex items-center justify-between">
+                        <span class="text-sm font-medium text-slate-500">
+                            Administradores
+                        </span>
+
+                        <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
                     </div>
-                    <strong class="block text-4xl font-bold tracking-tight text-slate-900"
-                            th:text="${totalAdmins != null ? totalAdmins : 0}">0</strong>
-                    <span class="mt-2 block text-sm text-slate-500">Con acceso al panel</span>
+
+                    <strong class="block text-2xl font-bold tracking-tight text-slate-900"
+                            th:text="${totalAdmins != null ? totalAdmins : 0}">
+                        0
+                    </strong>
+
+                    <span class="mt-1 block text-xs text-slate-500">
+                        Con acceso al panel
+                    </span>
                 </article>
 
-                <article class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
-                    <div class="mb-4 flex items-center justify-between">
-                        <span class="text-sm font-medium text-slate-500">Productos</span>
-                        <span class="h-2.5 w-2.5 rounded-full bg-violet-500"></span>
+                <article class="rounded-2xl border border-slate-200 bg-white px-5 py-3 shadow-sm transition hover:shadow-md">
+                    <div class="mb-2 flex items-center justify-between">
+                        <span class="text-sm font-medium text-slate-500">
+                            Productos
+                        </span>
+
+                        <span class="h-2 w-2 rounded-full bg-violet-500"></span>
                     </div>
-                    <strong class="block text-4xl font-bold tracking-tight text-slate-900"
-                            th:text="${totalProductos != null ? totalProductos : 0}">0</strong>
-                    <span class="mt-2 block text-sm text-slate-500">Publicados en el catálogo</span>
+
+                    <strong class="block text-2xl font-bold tracking-tight text-slate-900"
+                            th:text="${totalProductos != null ? totalProductos : 0}">
+                        0
+                    </strong>
+
+                    <span class="mt-1 block text-xs text-slate-500">
+                        Publicados en el catálogo
+                    </span>
                 </article>
 
-                <article class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
-                    <div class="mb-4 flex items-center justify-between">
-                        <span class="text-sm font-medium text-slate-500">Pedidos</span>
-                        <span class="h-2.5 w-2.5 rounded-full bg-amber-500"></span>
+                <article class="rounded-2xl border border-slate-200 bg-white px-5 py-3 shadow-sm transition hover:shadow-md">
+                    <div class="mb-2 flex items-center justify-between">
+                        <span class="text-sm font-medium text-slate-500">
+                            Pedidos
+                        </span>
+
+                        <span class="h-2 w-2 rounded-full bg-amber-500"></span>
                     </div>
-                    <strong class="block text-4xl font-bold tracking-tight text-slate-900"
-                            th:text="${totalPedidos != null ? totalPedidos : 0}">0</strong>
-                    <span class="mt-2 block text-sm text-slate-500">Pendientes de gestión</span>
+
+                    <strong class="block text-2xl font-bold tracking-tight text-slate-900"
+                            th:text="${totalPedidos != null ? totalPedidos : 0}">
+                        0
+                    </strong>
+
+                    <span class="mt-1 block text-xs text-slate-500">
+                        Registrados en la plataforma
+                    </span>
                 </article>
+
+            </section>
+
+            <section class="mt-6 rounded-3xl border border-slate-200 bg-white shadow-sm">
+                <div class="border-b border-slate-200 p-5">
+                    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-xs font-medium uppercase tracking-[0.2em] text-amber-600">
+                                Pedidos pendientes
+                            </p>
+
+                            <h2 class="mt-1.5 text-2xl font-bold tracking-tight text-slate-900">
+                                Pedidos pagados pendientes de entregar
+                            </h2>
+
+                            <p class="mt-1.5 text-sm text-slate-500">
+                                Estos pedidos ya han sido pagados y están pendientes de gestión o entrega.
+                            </p>
+                        </div>
+
+                        <span class="inline-flex w-fit items-center rounded-full bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700"
+                              th:text="${pedidosPendientes != null ? #lists.size(pedidosPendientes) + ' pendientes' : '0 pendientes'}">
+                            0 pendientes
+                        </span>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-slate-200"
+                           th:if="${pedidosPendientes != null and !#lists.isEmpty(pedidosPendientes)}">
+
+                        <thead class="bg-slate-50">
+                        <tr>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Pedido
+                            </th>
+
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Comprador ID
+                            </th>
+
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Fecha
+                            </th>
+
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Estado
+                            </th>
+
+                            <th scope="col"
+                                class="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Importe
+                            </th>
+
+                            <th scope="col"
+                                class="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Acciones
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody class="divide-y divide-slate-100 bg-white">
+                        <tr class="transition hover:bg-slate-50"
+                            th:each="pedido : ${pedidosPendientes}">
+
+                            <td class="whitespace-nowrap px-6 py-3 text-sm font-semibold text-slate-900"
+                                th:text="${'#' + pedido.id}">
+                                #1
+                            </td>
+
+                            <td class="whitespace-nowrap px-6 py-3 text-sm text-slate-600"
+                                th:text="${pedido.compradorId != null ? pedido.compradorId : '-'}">
+                                1
+                            </td>
+
+                            <td class="whitespace-nowrap px-6 py-3 text-sm text-slate-600"
+                                th:text="${pedido.fechaPedido != null ? #temporals.format(pedido.fechaPedido, 'dd/MM/yyyy HH:mm') : '-'}">
+                                26/05/2026 12:00
+                            </td>
+
+                            <td class="whitespace-nowrap px-6 py-3 text-sm">
+                                <span class="inline-flex rounded-full bg-amber-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-amber-700"
+                                      th:text="${pedido.estado != null ? pedido.estado : '-'}">
+                                    pendiente
+                                </span>
+                            </td>
+
+                            <td class="whitespace-nowrap px-6 py-3 text-right text-sm font-bold text-slate-900"
+                                th:text="${pedido.importeTotal != null ? #numbers.formatDecimal(pedido.importeTotal, 1, 'POINT', 2, 'COMMA') + ' €' : '0,00 €'}">
+                                0,00 €
+                            </td>
+
+                            <td class="whitespace-nowrap px-6 py-3 text-right">
+                                <div class="flex justify-end gap-2">
+
+                                    <form th:action="@{/admin/pedidos/{id}/entregar(id=${pedido.id})}"
+                                          method="post"
+                                          class="inline-flex">
+
+                                        <input type="hidden"
+                                               th:if="${_csrf != null}"
+                                               th:name="${_csrf.parameterName}"
+                                               th:value="${_csrf.token}">
+
+                                        <button type="submit"
+                                                title="Marcar como entregado"
+                                                class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 text-base font-bold text-emerald-700 transition hover:bg-emerald-100 hover:text-emerald-800">
+                                            ✓
+                                        </button>
+                                    </form>
+
+                                    <form th:action="@{/admin/pedidos/{id}/eliminar(id=${pedido.id})}"
+                                          method="post"
+                                          class="inline-flex"
+                                          onsubmit="return confirm('¿Seguro que quieres eliminar este pedido? Esta acción no se puede deshacer.');">
+
+                                        <input type="hidden"
+                                               th:if="${_csrf != null}"
+                                               th:name="${_csrf.parameterName}"
+                                               th:value="${_csrf.token}">
+
+                                        <button type="submit"
+                                                title="Eliminar pedido"
+                                                class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-red-200 bg-red-50 text-base font-bold text-red-700 transition hover:bg-red-100 hover:text-red-800">
+                                            ×
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="p-7 text-center"
+                         th:if="${pedidosPendientes == null or #lists.isEmpty(pedidosPendientes)}">
+
+                        <p class="text-base font-semibold text-slate-700">
+                            No hay pedidos pendientes.
+                        </p>
+
+                        <p class="mt-2 text-sm text-slate-500">
+                            Cuando un usuario pague un pedido, aparecerá aquí como pendiente de entrega.
+                        </p>
+
+                    </div>
+                </div>
             </section>
 
         </div>
     </main>
+
 </div>
+
 </body>
 </html>
