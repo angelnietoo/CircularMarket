@@ -1,65 +1,73 @@
 # CircularMarket
 
-CircularMarket es una aplicación web de comercio electrónico orientada a una tienda local. El proyecto permite a los usuarios registrarse, iniciar sesión, consultar productos, añadir artículos al carrito y realizar pedidos mediante una pasarela de pago integrada en modo de pruebas.
+CircularMarket es una web de tienda online creada como proyecto final de Desarrollo de Aplicaciones Web.
 
-El sistema también incluye un panel administrativo desde el que se pueden gestionar usuarios, productos, categorías, pedidos e indicadores básicos del sistema.
+La aplicación permite registrarse, iniciar sesión, ver productos, añadirlos al carrito y realizar pedidos con una pasarela de pago en modo de pruebas. También tiene un panel de administración para gestionar usuarios, productos, categorías y pedidos.
+
+Actualmente, el proyecto está enfocado en la venta de productos gestionados desde la propia tienda. Como mejora futura, se plantea añadir un sistema de compraventa C2C de productos de segunda mano, donde los usuarios puedan publicar y comprar productos entre ellos.
 
 ---
 
 ## Índice
 
 * [Descripción del proyecto](#descripción-del-proyecto)
-* [Funcionalidades principales](#funcionalidades-principales)
+* [Funcionalidades](#funcionalidades)
 * [Tecnologías utilizadas](#tecnologías-utilizadas)
 * [Diseño visual](#diseño-visual)
 * [Estructura del repositorio](#estructura-del-repositorio)
 * [Base de datos](#base-de-datos)
-* [Configuración del proyecto](#configuración-del-proyecto)
-* [Ejecución en local](#ejecución-en-local)
-* [Módulos principales](#módulos-principales)
+* [Configuración](#configuración)
+* [Cómo ejecutar el proyecto](#cómo-ejecutar-el-proyecto)
+* [Partes principales del proyecto](#partes-principales-del-proyecto)
 * [Seguridad](#seguridad)
 * [Pagos](#pagos)
-* [Análisis de datos](#análisis-de-datos)
+* [Estadísticas con Python](#estadísticas-con-python)
 * [Mejoras futuras](#mejoras-futuras)
+* [Autor](#autor)
 
 ---
 
 ## Descripción del proyecto
 
-CircularMarket nace como una solución web para digitalizar la venta de productos de una tienda local. La aplicación centraliza el catálogo de productos, la gestión de usuarios, el carrito de compra, los pedidos y el pago online.
+CircularMarket está pensada para una tienda local que quiere vender sus productos por internet.
 
-El objetivo principal del proyecto es desarrollar una plataforma funcional, sencilla y segura, donde el usuario pueda comprar productos de forma clara y donde el administrador pueda controlar el funcionamiento general de la tienda desde un panel privado.
+El proyecto tiene dos partes principales:
+
+* Una zona para usuarios, donde pueden ver productos, usar el carrito y hacer pedidos.
+* Una zona de administración, desde donde se gestionan los datos principales de la tienda.
+
+La idea principal es tener una web sencilla, clara y funcional para gestionar una tienda online básica. Más adelante, el proyecto podría ampliarse con una parte C2C para que los usuarios también puedan vender productos de segunda mano entre ellos.
 
 ---
 
-## Funcionalidades principales
+## Funcionalidades
 
 ### Usuario
 
-* Registro de nuevos usuarios.
+* Registro de usuario.
 * Inicio de sesión con email y contraseña.
-* Inicio de sesión mediante Google OAuth2.
-* Recuperación de contraseña mediante correo electrónico.
-* Consulta del catálogo de productos.
-* Búsqueda y filtrado de productos.
-* Visualización del detalle de cada producto.
+* Inicio de sesión con Google.
+* Recuperación de contraseña por correo.
+* Consulta de productos.
+* Búsqueda de productos.
+* Vista detalle de cada producto.
 * Añadir productos al carrito.
-* Modificar cantidades del carrito.
-* Vaciar el carrito.
+* Cambiar cantidades del carrito.
+* Eliminar productos del carrito.
 * Realizar pedidos.
-* Pago mediante Stripe en modo de pruebas.
+* Pago con Stripe en modo de pruebas.
 * Consulta de pedidos realizados.
 
 ### Administrador
 
-* Acceso a panel administrativo protegido.
+* Acceso a un panel privado.
 * Gestión de usuarios.
 * Gestión de productos.
 * Gestión de categorías.
 * Gestión de pedidos.
 * Cambio de estado de pedidos.
-* Visualización de indicadores básicos del sistema.
-* Consulta de estadísticas relacionadas con usuarios.
+* Consulta de datos básicos del sistema.
+* Visualización de estadísticas.
 
 ---
 
@@ -87,42 +95,35 @@ El objetivo principal del proyecto es desarrollar una plataforma funcional, senc
 
 ### Pagos
 
-* Stripe en modo de pruebas
+* Stripe
 
-### Autenticación y seguridad
-
-* Spring Security
-* OAuth2 con Google
-* Control de acceso por roles
-* Cifrado de contraseñas
-
-### Correo electrónico
+### Correo
 
 * Spring Mail
 * SMTP de Gmail
 
-### Análisis de datos
+### Estadísticas
 
 * Python
 * pandas
 * matplotlib
 * MySQL Connector
 
-### Gestión del proyecto
+### Herramientas
 
 * Maven
 * Git
 * GitHub
+* IntelliJ IDEA / VS Code
+* MySQL Workbench
 
 ---
 
 ## Diseño visual
 
-CircularMarket utiliza una interfaz limpia, moderna y responsive. El diseño se basa en una paleta de colores clara, tonos azules para acciones principales y una tipografía sans-serif sencilla y legible.
+La interfaz de CircularMarket usa un diseño claro, con fondos suaves, tarjetas blancas, tonos azules para botones y grises para textos y bordes.
 
 ### Paleta de colores
-
-La paleta de colores del proyecto se basa principalmente en tonos claros, azules y grises. Los tonos claros se utilizan para fondos, tarjetas y superficies. Los azules se emplean en botones, enlaces, acciones principales y elementos destacados. También se utilizan colores de apoyo para mensajes de éxito, avisos y estados importantes.
 
 <p align="center">
   <img src="docs/img/paleta-colores.png" alt="Paleta de colores de CircularMarket" width="900">
@@ -130,9 +131,7 @@ La paleta de colores del proyecto se basa principalmente en tonos claros, azules
 
 ### Tipografía
 
-La tipografía utilizada en CircularMarket se basa en una fuente sans-serif mediante las clases de TailwindCSS, principalmente `font-sans`, que utiliza la familia tipográfica del sistema. Esto permite mantener una apariencia limpia, legible y coherente en toda la aplicación.
-
-La jerarquía tipográfica diferencia entre títulos principales, subtítulos, texto de cuerpo, botones, etiquetas y elementos secundarios de la interfaz.
+La web usa una tipografía sans-serif mediante TailwindCSS, principalmente con la clase `font-sans`.
 
 <p align="center">
   <img src="docs/img/tipografia.png" alt="Guía tipográfica de CircularMarket" width="900">
@@ -175,30 +174,28 @@ CircularMarket/
     └── estadisticas_python/
 ```
 
-### Explicación de carpetas principales
+### Carpetas principales
 
-* `docs/`: contiene recursos utilizados para la documentación del proyecto.
-* `docs/img/`: contiene las imágenes utilizadas en este README.
-* `demo/`: contiene la aplicación Spring Boot.
-* `demo/src/main/java/`: contiene el código Java del back-end.
-* `config/`: configuración general del proyecto.
-* `controller/`: controladores encargados de gestionar las rutas de la aplicación.
-* `dto/`: objetos utilizados para transferir datos entre capas.
-* `model/`: entidades principales del sistema.
-* `repository/`: interfaces de acceso a base de datos.
-* `security/`: configuración relacionada con autenticación, autorización y roles.
-* `service/`: lógica de negocio de la aplicación.
-* `templates/`: vistas HTML desarrolladas con Thymeleaf.
-* `static/`: recursos estáticos como imágenes, JavaScript o archivos generados.
-* `estadisticas_python/`: scripts de Python utilizados para generar estadísticas.
+* `docs/`: imágenes y recursos usados en la documentación.
+* `demo/`: proyecto principal de Spring Boot.
+* `config/`: configuración del proyecto.
+* `controller/`: rutas y controladores de la web.
+* `dto/`: clases usadas para mover datos entre partes del proyecto.
+* `model/`: entidades de la base de datos.
+* `repository/`: consultas y acceso a la base de datos.
+* `security/`: configuración de seguridad, login y roles.
+* `service/`: lógica principal de la aplicación.
+* `templates/`: vistas HTML con Thymeleaf.
+* `static/`: imágenes, JavaScript y otros archivos estáticos.
+* `estadisticas_python/`: scripts de Python para generar estadísticas.
 
 ---
 
 ## Base de datos
 
-El proyecto utiliza MySQL como sistema gestor de base de datos.
+El proyecto usa MySQL.
 
-Principales tablas del sistema:
+Tablas principales:
 
 * `usuarios`
 * `rolusuarios`
@@ -209,21 +206,27 @@ Principales tablas del sistema:
 * `pedidos`
 * `pagos`
 
-La base de datos permite almacenar la información necesaria para gestionar usuarios, roles, productos, categorías, carritos, pedidos y pagos.
+Estas tablas guardan la información de usuarios, productos, categorías, carritos, pedidos y pagos.
 
 ---
 
-## Configuración del proyecto
+## Configuración
 
-Antes de ejecutar el proyecto, es necesario configurar el archivo:
+El archivo principal de configuración está en:
 
 ```text
 demo/src/main/resources/application.properties
 ```
 
-Este archivo debe contener la configuración de conexión con MySQL, correo electrónico, OAuth2 y Stripe.
+En este archivo se configura:
 
-Ejemplo orientativo:
+* Conexión con MySQL.
+* Stripe.
+* Correo electrónico.
+* Login con Google.
+* Configuración de JPA/Hibernate.
+
+Ejemplo:
 
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/circularmarket
@@ -233,45 +236,43 @@ spring.datasource.password=TU_PASSWORD
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 
-stripe.secret.key=TU_CLAVE_SECRETA_DE_STRIPE
+stripe.secret.key=TU_CLAVE_DE_STRIPE
 stripe.public.key=TU_CLAVE_PUBLICA_DE_STRIPE
 
 spring.mail.username=TU_CORREO
-spring.mail.password=TU_CONTRASEÑA_DE_APLICACION
+spring.mail.password=TU_PASSWORD_DE_APLICACION
 
 spring.security.oauth2.client.registration.google.client-id=TU_CLIENT_ID
 spring.security.oauth2.client.registration.google.client-secret=TU_CLIENT_SECRET
 ```
 
-Por seguridad, las claves reales no deben subirse al repositorio público.
-
 ---
 
-## Ejecución en local
+## Cómo ejecutar el proyecto
 
-### Requisitos previos
+### Requisitos
 
 * Java instalado.
 * Maven instalado.
 * MySQL instalado.
 * Base de datos `circularmarket` creada.
-* Claves de configuración añadidas en `application.properties`.
+* Archivo `application.properties` configurado.
 
-### Pasos de ejecución
+### Pasos
 
-Desde la raíz del repositorio:
+Entrar en la carpeta del proyecto:
 
 ```bash
 cd demo
 ```
 
-Ejecutar la aplicación:
+Ejecutar Spring Boot:
 
 ```bash
 mvn spring-boot:run
 ```
 
-Una vez iniciada, la aplicación estará disponible en:
+Abrir la web en el navegador:
 
 ```text
 http://localhost:8080
@@ -279,104 +280,102 @@ http://localhost:8080
 
 ---
 
-## Módulos principales
+## Partes principales del proyecto
 
-### Inicio y catálogo
+### Inicio y productos
 
-Permite mostrar la página principal, los productos disponibles y el detalle de cada producto.
+Muestra la página principal, el listado de productos y la vista detalle de cada producto.
 
-### Usuarios y autenticación
+### Usuarios
 
-Gestiona el registro, inicio de sesión, cierre de sesión, recuperación de contraseña y autenticación mediante Google.
+Gestiona el registro, login, cierre de sesión, recuperación de contraseña y acceso con Google.
 
 ### Carrito
 
-Permite añadir productos, modificar cantidades, eliminar artículos y revisar el resumen de compra.
+Permite añadir productos, cambiar cantidades, eliminar productos y revisar el pedido antes de pagar.
 
 ### Pedidos
 
-Gestiona la creación de pedidos una vez completado el proceso de compra.
+Guarda los pedidos realizados por los usuarios.
 
 ### Pagos
 
-Integra Stripe en modo de pruebas para simular pagos online.
+Integra Stripe en modo de pruebas para simular el pago de los pedidos.
 
 ### Panel administrativo
 
-Permite al administrador gestionar usuarios, productos, categorías y pedidos desde una zona privada.
+Permite al administrador controlar usuarios, productos, categorías y pedidos.
 
 ### Estadísticas
 
-Incluye scripts de Python para generar datos y gráficas relacionadas con el uso del sistema.
+Incluye scripts de Python para generar gráficas a partir de datos de la base de datos.
 
 ---
 
 ## Seguridad
 
-El proyecto implementa seguridad mediante Spring Security.
+La seguridad se gestiona con Spring Security.
 
-Medidas principales:
+El proyecto incluye:
 
+* Login con email y contraseña.
+* Login con Google.
 * Contraseñas cifradas.
 * Control de acceso por roles.
-* Rutas públicas y privadas diferenciadas.
-* Panel administrativo protegido.
-* Autenticación con email y contraseña.
-* Autenticación externa con Google OAuth2.
-* Validación de formularios.
-* Protección de operaciones críticas desde el servidor.
+* Rutas protegidas para el panel de administración.
+* Validaciones en formularios.
+* Operaciones importantes controladas desde el servidor.
 
 ---
 
 ## Pagos
 
-CircularMarket utiliza Stripe como pasarela de pago en modo de pruebas.
+El proyecto usa Stripe en modo de pruebas.
 
-El flujo de pago permite:
+Flujo básico:
 
-1. Revisar el carrito.
-2. Iniciar el checkout.
-3. Redirigir al usuario a Stripe.
-4. Confirmar el resultado del pago.
-5. Registrar el pedido.
-6. Guardar la información básica del pago.
-7. Vaciar el carrito tras la compra.
+1. El usuario revisa el carrito.
+2. Pulsa para pagar.
+3. Se abre el checkout de Stripe.
+4. Stripe confirma si el pago se ha completado.
+5. Se guarda el pedido.
+6. Se guarda la información del pago.
+7. Se vacía el carrito.
 
 ---
 
-## Análisis de datos
+## Estadísticas con Python
 
-El proyecto incluye una parte de análisis de datos mediante Python.
+El proyecto incluye una carpeta de Python para generar estadísticas.
 
-Se utilizan scripts para obtener información de la base de datos y generar estadísticas relacionadas con los usuarios registrados.
+Se usa para consultar datos de la base de datos y crear gráficas, por ejemplo sobre usuarios registrados.
 
-Tecnologías utilizadas en esta parte:
+Tecnologías usadas:
 
 * Python
 * pandas
 * matplotlib
 * MySQL Connector
 
-Las gráficas generadas pueden utilizarse como apoyo para el panel administrativo o para la documentación del proyecto.
-
 ---
 
 ## Mejoras futuras
 
-Algunas mejoras planteadas para futuras versiones son:
+Algunas mejoras que se podrían añadir más adelante:
 
-* Verificación completa de correo electrónico.
-* Sistema de valoraciones y reseñas.
-* Gestión de incidencias dentro de la plataforma.
-* Integración con otros métodos de pago como Bizum o transferencia.
-* Sistema de notificaciones.
-* Mejoras avanzadas de analítica.
-* Despliegue en servidor real con dominio y HTTPS.
+* Sistema de compraventa C2C para productos de segunda mano entre usuarios.
+* Verificación completa del correo al registrarse.
+* Valoraciones y reseñas de productos.
+* Apartado de incidencias dentro de la web.
+* Más métodos de pago, como Bizum o transferencia.
+* Notificaciones para usuarios.
+* Más estadísticas en el panel de administración.
+* Despliegue en un servidor real.
+* Dominio propio y HTTPS.
 * Automatización del despliegue.
-* Optimización del rendimiento y escalabilidad.
 
 ---
 
 ## Autor
 
-Proyecto desarrollado por Ángel Nieto Cordero como Proyecto Intermodular del ciclo de Desarrollo de Aplicaciones Web.
+Proyecto desarrollado por Ángel Nieto Cordero para el ciclo de Desarrollo de Aplicaciones Web.
