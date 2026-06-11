@@ -14,6 +14,7 @@ public class UsuarioAutenticado implements UserDetails {
     private final String email;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
+    private final boolean enabled;
 
     public UsuarioAutenticado(
             Long id,
@@ -21,7 +22,8 @@ public class UsuarioAutenticado implements UserDetails {
             String apellidos,
             String email,
             String password,
-            Collection<? extends GrantedAuthority> authorities
+            Collection<? extends GrantedAuthority> authorities,
+            boolean enabled
     ) {
         this.id = id;
         this.nombre = nombre;
@@ -29,6 +31,7 @@ public class UsuarioAutenticado implements UserDetails {
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+        this.enabled = enabled;
     }
 
     // Devuelve el ID del usuario autenticado.
@@ -44,6 +47,11 @@ public class UsuarioAutenticado implements UserDetails {
     // Devuelve los apellidos.
     public String getApellidos() {
         return apellidos;
+    }
+
+    // Devuelve el email del usuario.
+    public String getEmail() {
+        return email;
     }
 
     // Devuelve el nombre completo.
@@ -97,9 +105,9 @@ public class UsuarioAutenticado implements UserDetails {
         return true;
     }
 
-    // Indica si la cuenta está activa.
+    // Permite iniciar sesión solo si el correo está verificado.
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }

@@ -1,7 +1,9 @@
 package com.circularmarket.demo.controller;
 
 import com.circularmarket.demo.dto.RegistroRequest;
+import com.circularmarket.demo.model.Usuario;
 import com.circularmarket.demo.service.UsuarioService;
+import com.circularmarket.demo.service.VerificacionCorreoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +12,12 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final UsuarioService usuarioService;
+    private final VerificacionCorreoService verificacionCorreoService;
 
-    public AuthController(UsuarioService usuarioService) {
+    public AuthController(UsuarioService usuarioService,
+                          VerificacionCorreoService verificacionCorreoService) {
         this.usuarioService = usuarioService;
+        this.verificacionCorreoService = verificacionCorreoService;
     }
 
     // Redirige la ruta principal hacia la pantalla de login.
@@ -34,7 +39,7 @@ public class AuthController {
         return "registro";
     }
 
-    // Recibe los datos del formulario y registra un nuevo usuario.
+    // Recibe los datos del formulario, registra el usuario y envía el correo de verificación.
     @PostMapping("/registro")
     public String registrar(@ModelAttribute RegistroRequest registroRequest, Model model) {
 
@@ -87,9 +92,14 @@ public class AuthController {
         }
 
         try {
-            // Si todo es correcto, registra el usuario desde el servicio.
-            usuarioService.registrar(registroRequest);
-            return "redirect:/login?registrado=1";
+            // Registra el usuario en la base de datos.
+            Usuario usuario = usuarioService.registrar(registroRequest);
+
+            // Envía el correo para verificar que el email pertenece al usuario.
+            verificacionCorreoService.enviarCorreoVerificacion(usuario);
+
+            // Redirige al login avisando de que debe revisar el correo.
+            return "redirect:/login?verificaCorreo=1";
 
         } catch (IllegalArgumentException ex) {
             // Muestra errores controlados, como email ya registrado.

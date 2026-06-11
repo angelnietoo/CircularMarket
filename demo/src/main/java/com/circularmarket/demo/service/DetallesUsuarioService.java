@@ -21,7 +21,7 @@ public class DetallesUsuarioService implements UserDetailsService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    // Carga un usuario por su email en el login.
+    // Carga el usuario por email cuando se intenta iniciar sesión.
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
@@ -38,6 +38,7 @@ public class DetallesUsuarioService implements UserDetailsService {
             rol = usuario.getRol().getNombre().toUpperCase(Locale.ROOT);
         }
 
+        // Convierte el rol del usuario en un permiso válido para Spring Security.
         GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + rol);
 
         return new UsuarioAutenticado(
@@ -46,7 +47,8 @@ public class DetallesUsuarioService implements UserDetailsService {
                 usuario.getApellidos(),
                 usuario.getEmail(),
                 usuario.getContrasena(),
-                List.of(authority)
+                List.of(authority),
+                usuario.isEmailVerificado() // Bloquea el login si el correo no está verificado.
         );
     }
 }

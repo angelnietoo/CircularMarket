@@ -40,6 +40,8 @@ public class SecurityConfig {
                         "/login",
                         "/registro",
 
+                        "/verificar-correo",
+
                         "/recuperar-contrasena",
                         "/nueva-contrasena",
 
@@ -69,6 +71,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
         );
 
+        // Configura el login normal con email y contraseña.
         http.formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
@@ -77,18 +80,21 @@ public class SecurityConfig {
                 .permitAll()
         );
 
+        // Configura el login con Google OAuth2.
         http.oauth2Login(oauth2 -> oauth2
                 .loginPage("/login")
                 .successHandler(oAuth2UsuarioService)
                 .failureUrl("/login?error=google")
         );
 
+        // Configura el cierre de sesión del usuario.
         http.logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout=1")
                 .permitAll()
         );
 
+        // Desactiva CSRF para simplificar los formularios del proyecto.
         http.csrf(AbstractHttpConfigurer::disable);
 
         return http.build();

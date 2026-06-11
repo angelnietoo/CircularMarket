@@ -49,6 +49,15 @@ public class Usuario {
     @Column(name = "USreset_token_expira")
     private LocalDateTime resetTokenExpira;
 
+    @Column(name = "USemail_verificado", nullable = false)
+    private boolean emailVerificado = true;
+
+    @Column(name = "USemail_verificacion_token", length = 120)
+    private String emailVerificacionToken;
+
+    @Column(name = "USemail_verificacion_expira")
+    private LocalDateTime emailVerificacionExpira;
+
     public Usuario() {
     }
 
@@ -162,6 +171,30 @@ public class Usuario {
 
     public void setResetTokenExpira(LocalDateTime resetTokenExpira) {
         this.resetTokenExpira = resetTokenExpira;
+    }
+
+    public boolean isEmailVerificado() {
+        return emailVerificado;
+    }
+
+    public void setEmailVerificado(boolean emailVerificado) {
+        this.emailVerificado = emailVerificado;
+    }
+
+    public String getEmailVerificacionToken() {
+        return emailVerificacionToken;
+    }
+
+    public void setEmailVerificacionToken(String emailVerificacionToken) {
+        this.emailVerificacionToken = emailVerificacionToken;
+    }
+
+    public LocalDateTime getEmailVerificacionExpira() {
+        return emailVerificacionExpira;
+    }
+
+    public void setEmailVerificacionExpira(LocalDateTime emailVerificacionExpira) {
+        this.emailVerificacionExpira = emailVerificacionExpira;
     }
 
     public String getNombreCompleto() {

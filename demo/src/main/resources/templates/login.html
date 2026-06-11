@@ -38,6 +38,18 @@
                 </div>
             </div>
 
+            <div class="space-y-3" th:if="${param.verificaCorreo}">
+                <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+                    Registro completado. Revisa tu correo para verificar la cuenta antes de iniciar sesión.
+                </div>
+            </div>
+
+            <div class="space-y-3" th:if="${param.emailVerificado}">
+                <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+                    Correo verificado correctamente. Ya puedes iniciar sesión.
+                </div>
+            </div>
+
             <div class="space-y-3" th:if="${param.logout}">
                 <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
                     Sesión cerrada correctamente.
