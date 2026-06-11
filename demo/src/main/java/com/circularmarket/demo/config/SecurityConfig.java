@@ -39,15 +39,27 @@ public class SecurityConfig {
                         "/",
                         "/login",
                         "/registro",
+
+                        "/recuperar-contrasena",
+                        "/nueva-contrasena",
+
                         "/inicio",
                         "/buscar",
+
                         "/productos",
+                        "/productos/**",
+
                         "/producto/**",
+
+                        "/terminos",
+                        "/privacidad",
+
                         "/css/**",
                         "/js/**",
                         "/images/**",
                         "/img/**",
                         "/favicon.ico",
+
                         "/oauth2/**",
                         "/login/oauth2/**"
                 ).permitAll()

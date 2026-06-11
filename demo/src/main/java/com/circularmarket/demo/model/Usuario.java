@@ -43,6 +43,12 @@ public class Usuario {
     @Column(name = "USactualizadoen", insertable = false, updatable = false)
     private LocalDateTime actualizadoEn;
 
+    @Column(name = "USreset_token", length = 120)
+    private String resetToken;
+
+    @Column(name = "USreset_token_expira")
+    private LocalDateTime resetTokenExpira;
+
     public Usuario() {
     }
 
@@ -140,6 +146,22 @@ public class Usuario {
 
     public LocalDateTime getActualizadoEn() {
         return actualizadoEn;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public LocalDateTime getResetTokenExpira() {
+        return resetTokenExpira;
+    }
+
+    public void setResetTokenExpira(LocalDateTime resetTokenExpira) {
+        this.resetTokenExpira = resetTokenExpira;
     }
 
     public String getNombreCompleto() {

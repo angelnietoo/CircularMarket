@@ -10,12 +10,12 @@
 
 <body class="min-h-screen bg-slate-100 text-slate-900 antialiased">
 
-<div class="flex min-h-screen">
+<div class="flex min-h-screen flex-col lg:flex-row">
 
     <aside th:replace="~{fragments/sidebar-admin :: sidebar}"></aside>
 
-    <main class="flex-1 min-w-0">
-        <div class="mx-auto max-w-7xl p-6 lg:p-8">
+    <main class="min-w-0 flex-1">
+        <div class="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
 
             <header class="mb-5 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -113,6 +113,150 @@
                     </span>
                 </article>
 
+            </section>
+
+            <!-- Gráficos y estadísticas -->
+            <section class="mt-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="mb-5 border-b border-slate-200 pb-5">
+                    <p class="text-xs font-medium uppercase tracking-[0.2em] text-blue-600">
+                        Gráficos y estadísticas
+                    </p>
+
+                    <h2 class="mt-1.5 text-2xl font-bold tracking-tight text-slate-900">
+                        Evolución de registros de usuarios
+                    </h2>
+
+                    <p class="mt-1.5 text-sm text-slate-500">
+                        Gráfico y resumen estadístico de los usuarios registrados.
+                    </p>
+                </div>
+
+                <div class="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+
+                    <article class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                            Total analizado
+                        </p>
+
+                        <p id="totalUsuariosAnalizados"
+                           class="mt-2 text-2xl font-extrabold text-slate-900">
+                            0
+                        </p>
+
+                        <p class="mt-1 text-xs text-slate-500">
+                            Usuarios con fecha de registro
+                        </p>
+                    </article>
+
+                    <article class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                            Esta semana
+                        </p>
+
+                        <p id="usuariosSemanaActual"
+                           class="mt-2 text-2xl font-extrabold text-slate-900">
+                            0
+                        </p>
+
+                        <p class="mt-1 text-xs text-slate-500">
+                            Nuevos registros
+                        </p>
+                    </article>
+
+                    <article class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                            Semana anterior
+                        </p>
+
+                        <p id="usuariosSemanaAnterior"
+                           class="mt-2 text-2xl font-extrabold text-slate-900">
+                            0
+                        </p>
+
+                        <p class="mt-1 text-xs text-slate-500">
+                            Registros previos
+                        </p>
+                    </article>
+
+                    <article id="tarjetaVariacionUsuarios"
+                             class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                            Variación
+                        </p>
+
+                        <p id="variacionUsuariosSemana"
+                           class="mt-2 text-2xl font-extrabold text-slate-900">
+                            0
+                        </p>
+
+                        <p id="porcentajeVariacionUsuariosSemana"
+                           class="mt-1 text-xs font-bold text-slate-500">
+                            0,00%
+                        </p>
+                    </article>
+
+                    <article class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                            Mejor día
+                        </p>
+
+                        <p id="diaMasRegistrosTotal"
+                           class="mt-2 text-2xl font-extrabold text-slate-900">
+                            0
+                        </p>
+
+                        <p id="diaMasRegistrosFecha"
+                           class="mt-1 text-xs font-bold text-slate-500">
+                            Sin datos
+                        </p>
+                    </article>
+
+                </div>
+
+                <div class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:p-5">
+                    <img th:src="@{/img/estadisticas/usuarios_registrados_por_dia.png}"
+                         src="/img/estadisticas/usuarios_registrados_por_dia.png"
+                         alt="Gráfico de usuarios registrados por día generado con Python"
+                         class="mx-auto h-auto max-h-[420px] w-full rounded-xl bg-white object-contain shadow-sm"
+                         onerror="this.style.display='none'; document.getElementById('mensajeGraficaNoEncontrada').classList.remove('hidden');">
+                </div>
+
+                <div id="mensajeGraficaNoEncontrada"
+                     class="hidden mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                    No se ha encontrado la imagen de la estadística. Ejecuta el script de Python para generar el gráfico:
+                    <span class="font-semibold">estadisticas_python/estadisticas_usuarios.py</span>
+                </div>
+
+                <div class="mt-4 grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:grid-cols-2">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                            Primer registro analizado
+                        </p>
+
+                        <p id="primerRegistro"
+                           class="mt-1 text-sm font-semibold text-slate-800">
+                            Sin datos
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                            Último registro analizado
+                        </p>
+
+                        <p id="ultimoRegistro"
+                           class="mt-1 text-sm font-semibold text-slate-800">
+                            Sin datos
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex justify-end text-sm">
+                    <a th:href="@{/img/estadisticas/usuarios_registrados_por_dia.csv}"
+                       class="font-semibold text-blue-700 hover:underline">
+                        Descargar CSV
+                    </a>
+                </div>
             </section>
 
             <section class="mt-6 rounded-3xl border border-slate-200 bg-white shadow-sm">
@@ -270,6 +414,63 @@
     </main>
 
 </div>
+
+<script>
+    async function cargarResumenEstadisticasPython() {
+        try {
+            const respuesta = await fetch('/img/estadisticas/estadisticas_usuarios.json');
+
+            if (!respuesta.ok) {
+                return;
+            }
+
+            const datos = await respuesta.json();
+
+            document.getElementById('totalUsuariosAnalizados').textContent = datos.totalUsuariosAnalizados ?? 0;
+            document.getElementById('usuariosSemanaActual').textContent = datos.usuariosSemanaActual ?? 0;
+            document.getElementById('usuariosSemanaAnterior').textContent = datos.usuariosSemanaAnterior ?? 0;
+
+            const variacion = datos.variacionUsuariosSemana ?? 0;
+            const porcentaje = datos.porcentajeVariacionUsuariosSemana ?? 0;
+
+            document.getElementById('variacionUsuariosSemana').textContent = variacion > 0 ? '+' + variacion : variacion;
+            document.getElementById('porcentajeVariacionUsuariosSemana').textContent = Number(porcentaje).toFixed(2) + '%';
+
+            document.getElementById('diaMasRegistrosTotal').textContent = datos.diaMasRegistrosTotal ?? 0;
+            document.getElementById('diaMasRegistrosFecha').textContent = datos.diaMasRegistrosFecha ?? 'Sin datos';
+
+            document.getElementById('primerRegistro').textContent = datos.primerRegistro ?? 'Sin datos';
+            document.getElementById('ultimoRegistro').textContent = datos.ultimoRegistro ?? 'Sin datos';
+
+            const tarjetaVariacion = document.getElementById('tarjetaVariacionUsuarios');
+            const textoVariacion = document.getElementById('variacionUsuariosSemana');
+            const textoPorcentaje = document.getElementById('porcentajeVariacionUsuariosSemana');
+
+            tarjetaVariacion.className = 'rounded-2xl border p-4';
+            textoVariacion.className = 'mt-2 text-2xl font-extrabold';
+            textoPorcentaje.className = 'mt-1 text-xs font-bold';
+
+            if (variacion > 0) {
+                tarjetaVariacion.classList.add('border-emerald-200', 'bg-emerald-50');
+                textoVariacion.classList.add('text-emerald-700');
+                textoPorcentaje.classList.add('text-emerald-700');
+            } else if (variacion < 0) {
+                tarjetaVariacion.classList.add('border-red-200', 'bg-red-50');
+                textoVariacion.classList.add('text-red-700');
+                textoPorcentaje.classList.add('text-red-700');
+            } else {
+                tarjetaVariacion.classList.add('border-slate-200', 'bg-slate-50');
+                textoVariacion.classList.add('text-slate-900');
+                textoPorcentaje.classList.add('text-slate-500');
+            }
+
+        } catch (error) {
+            console.error('No se pudo cargar el resumen de estadísticas generado por Python.', error);
+        }
+    }
+
+    cargarResumenEstadisticasPython();
+</script>
 
 </body>
 </html>

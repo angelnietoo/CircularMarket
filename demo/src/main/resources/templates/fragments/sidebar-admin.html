@@ -1,48 +1,126 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <body>
+
 <aside th:fragment="sidebar"
-       class="w-full border-b border-slate-200 bg-white lg:w-72 lg:border-r lg:border-b-0">
-    <div class="p-6 lg:p-8">
-        <div class="mb-8">
+       class="w-full border-b border-slate-200 bg-white lg:sticky lg:top-0 lg:h-screen lg:w-72 lg:shrink-0 lg:border-r lg:border-b-0">
+
+    <!-- Cabecera móvil -->
+    <div class="flex items-center justify-between px-4 py-3 lg:hidden">
+        <a th:href="@{/admin}"
+           class="text-xl font-bold tracking-tight text-slate-900">
+            Circular<span class="text-blue-600">Market</span>
+        </a>
+
+        <button type="button"
+                id="adminSidebarButton"
+                class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:bg-slate-100"
+                aria-label="Abrir menú de administración"
+                aria-controls="adminSidebarMenu"
+                aria-expanded="false">
+            <svg id="adminSidebarIconOpen"
+                 xmlns="http://www.w3.org/2000/svg"
+                 class="h-5 w-5"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+                <line x1="4" y1="6" x2="20" y2="6"></line>
+                <line x1="4" y1="12" x2="20" y2="12"></line>
+                <line x1="4" y1="18" x2="20" y2="18"></line>
+            </svg>
+
+            <svg id="adminSidebarIconClose"
+                 xmlns="http://www.w3.org/2000/svg"
+                 class="hidden h-5 w-5"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Contenido del sidebar -->
+    <div id="adminSidebarMenu"
+         class="hidden border-t border-slate-200 px-4 pb-4 pt-3 lg:block lg:h-full lg:border-t-0 lg:px-6 lg:py-8">
+
+        <!-- Cabecera escritorio -->
+        <div class="mb-6 hidden lg:block">
             <h1 class="text-2xl font-bold tracking-tight text-slate-900">
                 Circular<span class="text-blue-600">Market</span>
             </h1>
-            <p class="mt-2 text-sm text-slate-500">Panel de administración</p>
+
+            <p class="mt-2 text-sm text-slate-500">
+                Panel de administración
+            </p>
         </div>
 
-        <nav class="flex flex-col gap-2">
-            <a class="rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+        <nav class="flex flex-col gap-1.5">
+            <a class="rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
                th:href="@{/admin}">
                 Dashboard
             </a>
 
-            <a class="rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+            <a class="rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
                th:href="@{/admin/usuarios}">
                 Usuarios
             </a>
 
-            <a class="rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+            <a class="rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
                th:href="@{/admin/productos}">
                 Productos
             </a>
 
-            <a class="rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+            <a class="rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
                th:href="@{/admin/categorias}">
                 Categorías
             </a>
 
-            <a class="rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+            <div class="my-2 border-t border-slate-200"></div>
+
+            <a class="rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
                th:href="@{/inicio}">
                 Volver a la web
             </a>
 
-            <a class="rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+            <a class="rounded-xl px-3 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50 hover:text-red-700"
                th:href="@{/logout}">
                 Cerrar sesión
             </a>
         </nav>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const boton = document.getElementById('adminSidebarButton');
+            const menu = document.getElementById('adminSidebarMenu');
+            const iconoAbrir = document.getElementById('adminSidebarIconOpen');
+            const iconoCerrar = document.getElementById('adminSidebarIconClose');
+
+            if (!boton || !menu || !iconoAbrir || !iconoCerrar) {
+                return;
+            }
+
+            boton.addEventListener('click', function () {
+                const estaOculto = menu.classList.contains('hidden');
+
+                menu.classList.toggle('hidden');
+                iconoAbrir.classList.toggle('hidden');
+                iconoCerrar.classList.toggle('hidden');
+
+                boton.setAttribute('aria-expanded', estaOculto ? 'true' : 'false');
+            });
+        });
+    </script>
+
 </aside>
+
 </body>
 </html>

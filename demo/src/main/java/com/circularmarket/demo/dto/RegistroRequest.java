@@ -10,6 +10,9 @@ public class RegistroRequest {
     private String password;
     private String repetirPassword;
 
+    // Checkbox obligatorio para aceptar términos y condiciones
+    private boolean aceptaTerminos;
+
     public RegistroRequest() {
     }
 
@@ -67,5 +70,13 @@ public class RegistroRequest {
 
     public void setRepetirPassword(String repetirPassword) {
         this.repetirPassword = repetirPassword;
+    }
+
+    public boolean isAceptaTerminos() {
+        return aceptaTerminos;
+    }
+
+    public void setAceptaTerminos(boolean aceptaTerminos) {
+        this.aceptaTerminos = aceptaTerminos;
     }
 }

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Detalle producto | CircularMarket</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50 text-slate-950">
+
+<div class="min-h-screen lg:flex">
+    <div th:replace="~{fragments/sidebar-admin :: sidebar}"></div>
+
+    <main class="flex-1 p-6 lg:p-8">
+        <header class="mb-6 flex flex-col gap-4 rounded-[20px] border border-slate-200 bg-white p-6 shadow-lg sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h2 class="text-2xl font-bold tracking-tight text-slate-900">Detalle del producto</h2>
+                <p class="mt-1 text-sm text-slate-500">Consulta completa del producto seleccionado</p>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+                <a th:href="@{/admin/productos}"
+                   class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
+                    Volver
+                </a>
+
+                <a th:href="@{/admin/productos/{id}/editar(id=${producto.id})}"
+                   class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700">
+                    Editar producto
+                </a>
+            </div>
+        </header>
+
+        <section class="grid gap-6 rounded-[20px] border border-slate-200 bg-white p-6 shadow-lg xl:grid-cols-[360px_1fr]">
+
+            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
+                <img th:if="${producto.imagen != null}"
+                     th:src="@{/productos/{id}/imagen(id=${producto.id})}"
+                     alt="Imagen del producto"
+                     class="h-72 w-full object-cover">
+
+                <div th:if="${producto.imagen == null}"
+                     class="flex h-72 w-full items-center justify-center text-sm font-semibold text-slate-400">
+                    Sin imagen
+                </div>
+            </div>
+
+            <div>
+                <div class="mb-6 border-b border-slate-200 pb-5">
+                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-blue-600">Producto</p>
+
+                    <h1 class="mt-2 text-3xl font-extrabold text-slate-900"
+                        th:text="${producto.titulo}">
+                        Producto
+                    </h1>
+
+                    <p class="mt-2 text-sm text-slate-500"
+                       th:text="'ID interno: #' + ${producto.id}">
+                        ID interno
+                    </p>
+                </div>
+
+                <div class="grid gap-4 md:grid-cols-2">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">Precio</p>
+                        <p class="mt-2 text-2xl font-extrabold text-slate-900"
+                           th:text="${#numbers.formatDecimal(producto.precio, 1, 2)} + ' €'">
+                            0,00 €
+                        </p>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">Stock</p>
+                        <p class="mt-2 text-2xl font-extrabold text-slate-900"
+                           th:text="${producto.stock}">
+                            0
+                        </p>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">Categoría</p>
+                        <p class="mt-2 text-sm font-semibold text-slate-900"
+                           th:text="${producto.categoria != null ? producto.categoria.nombre : 'Sin categoría'}">
+                            Categoría
+                        </p>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">Estado</p>
+
+                        <span th:if="${producto.activo}"
+                              class="mt-2 inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">
+                            Activo
+                        </span>
+
+                        <span th:unless="${producto.activo}"
+                              class="mt-2 inline-flex rounded-full bg-rose-100 px-3 py-1 text-xs font-bold text-rose-700">
+                            Inactivo
+                        </span>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">Tipo de imagen</p>
+                        <p class="mt-2 text-sm font-semibold text-slate-900"
+                           th:text="${producto.imagenTipo != null and !producto.imagenTipo.isBlank() ? producto.imagenTipo : 'Sin imagen'}">
+                            image/jpeg
+                        </p>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">Fecha de creación</p>
+                        <p class="mt-2 text-sm font-semibold text-slate-900"
+                           th:text="${producto.creadoEn != null ? #temporals.format(producto.creadoEn, 'dd/MM/yyyy HH:mm') : 'No disponible'}">
+                            Fecha
+                        </p>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">Última actualización</p>
+                        <p class="mt-2 text-sm font-semibold text-slate-900"
+                           th:text="${producto.actualizadoEn != null ? #temporals.format(producto.actualizadoEn, 'dd/MM/yyyy HH:mm') : 'No disponible'}">
+                            Fecha
+                        </p>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 md:col-span-2">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">Descripción</p>
+                        <p class="mt-2 whitespace-pre-line text-sm leading-7 text-slate-700"
+                           th:text="${producto.descripcion != null and !producto.descripcion.isBlank() ? producto.descripcion : 'Sin descripción'}">
+                            Descripción
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+</body>
+</html>

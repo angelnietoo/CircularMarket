@@ -33,6 +33,7 @@ public class OAuth2UsuarioService implements AuthenticationSuccessHandler {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // Se ejecuta cuando el usuario inicia sesión correctamente con Google.
     @Override
     @Transactional
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -41,11 +42,13 @@ public class OAuth2UsuarioService implements AuthenticationSuccessHandler {
 
         Object principal = authentication.getPrincipal();
 
+        // Comprueba que el login recibido sea realmente de Google OAuth2.
         if (!(principal instanceof OAuth2User oauth2User)) {
             response.sendRedirect(request.getContextPath() + "/login?error=google");
             return;
         }
 
+        // Obtiene los datos que Google devuelve del usuario.
         Map<String, Object> atributos = oauth2User.getAttributes();
 
         String email = obtenerTexto(atributos, "email");
@@ -53,6 +56,7 @@ public class OAuth2UsuarioService implements AuthenticationSuccessHandler {
         String apellidos = obtenerTexto(atributos, "family_name");
         String nombreCompleto = obtenerTexto(atributos, "name");
 
+        // Sin email no se puede identificar ni crear el usuario.
         if (email == null || email.isBlank()) {
             response.sendRedirect(request.getContextPath() + "/login?error=google-email");
             return;
@@ -60,6 +64,7 @@ public class OAuth2UsuarioService implements AuthenticationSuccessHandler {
 
         email = email.trim().toLowerCase();
 
+        // Si Google no separa nombre y apellidos, los intenta sacar del nombre completo.
         if ((nombre == null || nombre.isBlank()) && nombreCompleto != null && !nombreCompleto.isBlank()) {
             String[] partes = nombreCompleto.trim().split("\\s+", 2);
             nombre = partes[0];
@@ -69,20 +74,25 @@ public class OAuth2UsuarioService implements AuthenticationSuccessHandler {
             }
         }
 
+        // Si no llega nombre, se usa uno por defecto.
         if (nombre == null || nombre.isBlank()) {
             nombre = "Usuario";
         }
 
+        // Evita guardar apellidos como null.
         if (apellidos == null) {
             apellidos = "";
         }
 
+        // Busca si ya existe un usuario con ese email.
         Usuario usuario = usuarioRepository.findByEmail(email).orElse(null);
 
+        // Si no existe, crea un usuario nuevo usando los datos de Google.
         if (usuario == null) {
             RolUsuario rolUser = rolUsuarioRepository.findByNombreIgnoreCase("USER")
                     .orElse(null);
 
+            // Si no existe el rol USER, no se puede crear el usuario.
             if (rolUser == null) {
                 response.sendRedirect(request.getContextPath() + "/login?error=rol-user");
                 return;
@@ -92,15 +102,21 @@ public class OAuth2UsuarioService implements AuthenticationSuccessHandler {
             usuario.setNombre(nombre);
             usuario.setApellidos(apellidos);
             usuario.setEmail(email);
+
+            // Se genera una contraseña aleatoria porque el usuario entra con Google.
             usuario.setContrasena(passwordEncoder.encode(UUID.randomUUID().toString()));
+
+            // Asigna el rol de usuario normal.
             usuario.setRol(rolUser);
 
             usuarioRepository.save(usuario);
         }
 
+        // Después del login correcto, manda al usuario al inicio.
         response.sendRedirect(request.getContextPath() + "/inicio");
     }
 
+    // Obtiene un texto de los datos de Google y lo limpia.
     private String obtenerTexto(Map<String, Object> atributos, String clave) {
         Object valor = atributos.get(clave);
 

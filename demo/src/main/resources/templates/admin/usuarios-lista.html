@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Usuarios | CircularMarket</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-slate-50 text-slate-950">
 
 <div class="min-h-screen lg:flex">
     <div th:replace="~{fragments/sidebar-admin :: sidebar}"></div>
 
-    <main class="flex-1 p-6 lg:p-8">
-        <header class="mb-6 flex flex-col gap-4 rounded-[20px] border border-slate-200 bg-white p-6 shadow-lg sm:flex-row sm:items-center sm:justify-between">
+    <main class="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
+        <header class="mb-6 flex flex-col gap-4 rounded-[20px] border border-slate-200 bg-white p-5 shadow-lg sm:flex-row sm:items-center sm:justify-between sm:p-6">
             <div>
                 <h2 class="text-2xl font-bold tracking-tight text-slate-900">Usuarios</h2>
                 <p class="mt-1 text-sm text-slate-500">
@@ -28,99 +29,188 @@
 
         <section class="overflow-hidden rounded-[20px] border border-slate-200 bg-white shadow-lg">
             <div class="border-b border-slate-200 bg-slate-50 px-5 py-4">
-                <h3 class="text-lg font-semibold text-slate-900">
-                    Listado de usuarios
-                </h3>
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-slate-900">
+                            Listado de usuarios
+                        </h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            Filtra por nombre, email, teléfono, dirección o rol.
+                        </p>
+                    </div>
+
+                    <form class="flex w-full flex-col gap-2 sm:flex-row lg:max-w-xl"
+                          th:action="@{/admin/usuarios}"
+                          method="get">
+
+                        <input type="text"
+                               name="q"
+                               placeholder="Buscar por nombre, email, rol, etc."
+                               th:value="${q}"
+                               class="min-w-0 flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"/>
+
+                        <button type="submit"
+                                class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
+                            Buscar
+                        </button>
+
+                        <a th:if="${q != null and !q.isBlank()}"
+                           th:href="@{/admin/usuarios}"
+                           class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
+                            Limpiar
+                        </a>
+                    </form>
+                </div>
             </div>
 
-            <form class="flex flex-col gap-3 p-5 sm:flex-row sm:items-center"
-                  th:action="@{/admin/usuarios}"
-                  method="get">
-
-                <input type="text"
-                       name="q"
-                       placeholder="Buscar por nombre, email o rol"
-                       th:value="${q}"
-                       class="min-w-0 flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100" />
-
-                <button type="submit"
-                        class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
-                    Buscar
-                </button>
-            </form>
-
-            <div class="overflow-x-auto px-5 pb-5"
+            <div class="px-3 pb-5 pt-5 sm:px-5"
                  th:if="${usuarios != null and !#lists.isEmpty(usuarios)}">
 
-                <table class="min-w-full divide-y divide-slate-200">
+                <table class="w-full table-fixed divide-y divide-slate-200">
                     <thead class="bg-white">
                     <tr>
-                        <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">ID</th>
-                        <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">Nombre</th>
-                        <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">Apellidos</th>
-                        <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">Email</th>
-                        <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">Teléfono</th>
-                        <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">Dirección</th>
-                        <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700">Rol</th>
-                        <th class="px-5 py-2 text-center text-sm font-semibold text-slate-700">Acciones</th>
+                        <th class="w-[52px] px-2 py-3 text-left text-xs font-semibold text-slate-700 sm:w-[60px] sm:px-3 sm:text-sm">
+                            ID
+                        </th>
+
+                        <th class="px-2 py-3 text-left text-xs font-semibold text-slate-700 sm:px-3 sm:text-sm">
+                            Usuario
+                        </th>
+
+                        <th class="hidden px-2 py-3 text-left text-sm font-semibold text-slate-700 md:table-cell">
+                            Email
+                        </th>
+
+                        <th class="hidden px-2 py-3 text-left text-sm font-semibold text-slate-700 xl:table-cell">
+                            Teléfono
+                        </th>
+
+                        <th class="hidden px-2 py-3 text-left text-sm font-semibold text-slate-700 2xl:table-cell">
+                            Dirección
+                        </th>
+
+                        <th class="hidden w-[110px] px-2 py-3 text-left text-sm font-semibold text-slate-700 lg:table-cell">
+                            Rol
+                        </th>
+
+                        <th class="w-[116px] px-2 py-3 text-center text-xs font-semibold text-slate-700 sm:w-[220px] sm:px-3 sm:text-sm">
+                            Acciones
+                        </th>
                     </tr>
                     </thead>
 
                     <tbody class="divide-y divide-slate-200 bg-white">
                     <tr th:each="usuario : ${usuarios}" class="hover:bg-slate-50">
-                        <td class="px-5 py-2 text-sm font-medium text-slate-900"
+                        <td class="whitespace-nowrap px-2 py-3 text-xs font-medium text-slate-900 sm:px-3 sm:text-sm"
                             th:text="${usuario.id}">
                             1
                         </td>
 
-                        <td class="px-5 py-2 text-sm text-slate-700"
-                            th:text="${usuario.nombre}">
-                            Nombre
+                        <td class="min-w-0 px-2 py-3 sm:px-3">
+                            <div class="min-w-0">
+                                <p class="truncate text-xs font-semibold text-slate-900 sm:text-sm"
+                                   th:text="${usuario.nombreCompleto}">
+                                    Nombre completo
+                                </p>
+
+                                <p class="mt-0.5 truncate text-[11px] text-slate-500 md:hidden"
+                                   th:text="${usuario.email}">
+                                    email@correo.com
+                                </p>
+
+                                <p class="mt-0.5 truncate text-[11px] text-slate-500 lg:hidden"
+                                   th:text="${usuario.rol != null ? usuario.rol.nombre : 'Sin rol'}">
+                                    Rol
+                                </p>
+                            </div>
                         </td>
 
-                        <td class="px-5 py-2 text-sm text-slate-700"
-                            th:text="${usuario.apellidos}">
-                            Apellidos
+                        <td class="hidden min-w-0 px-2 py-3 text-sm text-slate-700 md:table-cell">
+                            <div class="truncate"
+                                 th:text="${usuario.email}"
+                                 th:title="${usuario.email}">
+                                email@correo.com
+                            </div>
                         </td>
 
-                        <td class="px-5 py-2 text-sm text-slate-700"
-                            th:text="${usuario.email}">
-                            email@correo.com
+                        <td class="hidden min-w-0 px-2 py-3 text-sm text-slate-700 xl:table-cell">
+                            <div class="truncate"
+                                 th:text="${usuario.telefono != null and !usuario.telefono.isBlank() ? usuario.telefono : '-'}">
+                                600000000
+                            </div>
                         </td>
 
-                        <td class="px-5 py-2 text-sm text-slate-700"
-                            th:text="${usuario.telefono}">
-                            600000000
+                        <td class="hidden min-w-0 px-2 py-3 text-sm text-slate-700 2xl:table-cell">
+                            <div class="truncate"
+                                 th:text="${usuario.direccion != null and !usuario.direccion.isBlank() ? usuario.direccion : '-'}"
+                                 th:title="${usuario.direccion != null ? usuario.direccion : ''}">
+                                Dirección
+                            </div>
                         </td>
 
-                        <td class="px-5 py-2 text-sm text-slate-700"
-                            th:text="${usuario.direccion}">
-                            Dirección
+                        <td class="hidden px-2 py-3 text-sm text-slate-700 lg:table-cell">
+                            <div class="truncate"
+                                 th:text="${usuario.rol != null ? usuario.rol.nombre : 'Sin rol'}">
+                                USER
+                            </div>
                         </td>
 
-                        <td class="px-5 py-2 text-sm text-slate-700"
-                            th:text="${usuario.rol != null ? usuario.rol.nombre : 'Sin rol'}">
-                            USER
-                        </td>
-
-                        <td class="px-5 py-2">
-                            <div class="flex justify-end gap-2">
-                                <a th:href="@{/admin/usuarios/{id}/editar(id=${usuario.id})}"
-                                   class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
-                                    Editar
+                        <td class="px-2 py-3 sm:px-3">
+                            <div class="flex items-center justify-center gap-1 sm:hidden">
+                                <a th:href="@{/admin/usuarios/{id}/ver(id=${usuario.id})}"
+                                   title="Ver"
+                                   class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-blue-200 bg-blue-50 text-xs font-bold text-blue-700 transition hover:bg-blue-100">
+                                    V
                                 </a>
 
-                                <form th:action="@{/admin/usuarios/{id}/eliminar(id=${usuario.id}, page=${paginaUsuarios != null ? paginaUsuarios.number : 0})}"
+                                <a th:href="@{/admin/usuarios/{id}/editar(id=${usuario.id})}"
+                                   title="Editar"
+                                   class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-700 transition hover:bg-slate-100">
+                                    E
+                                </a>
+
+                                <form th:action="@{/admin/usuarios/{id}/eliminar(id=${usuario.id}, page=${paginaUsuarios != null ? paginaUsuarios.number : 0}, q=${q})}"
                                       method="post"
+                                      class="m-0 inline-flex"
                                       onsubmit="return confirm('¿Seguro que quieres eliminar este usuario?');">
 
                                     <input type="hidden"
                                            th:if="${_csrf != null}"
                                            th:name="${_csrf.parameterName}"
-                                           th:value="${_csrf.token}" />
+                                           th:value="${_csrf.token}"/>
 
                                     <button type="submit"
-                                            class="inline-flex items-center justify-center rounded-xl bg-rose-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-rose-700">
+                                            title="Eliminar"
+                                            class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-rose-600 text-xs font-bold text-white transition hover:bg-rose-700">
+                                        X
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="hidden items-center justify-center gap-2 sm:flex">
+                                <a th:href="@{/admin/usuarios/{id}/ver(id=${usuario.id})}"
+                                   class="inline-flex h-9 w-[62px] items-center justify-center rounded-xl border border-blue-200 bg-blue-50 text-sm font-semibold text-blue-700 transition hover:bg-blue-100">
+                                    Ver
+                                </a>
+
+                                <a th:href="@{/admin/usuarios/{id}/editar(id=${usuario.id})}"
+                                   class="inline-flex h-9 w-[68px] items-center justify-center rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
+                                    Editar
+                                </a>
+
+                                <form th:action="@{/admin/usuarios/{id}/eliminar(id=${usuario.id}, page=${paginaUsuarios != null ? paginaUsuarios.number : 0}, q=${q})}"
+                                      method="post"
+                                      class="m-0 inline-flex"
+                                      onsubmit="return confirm('¿Seguro que quieres eliminar este usuario?');">
+
+                                    <input type="hidden"
+                                           th:if="${_csrf != null}"
+                                           th:name="${_csrf.parameterName}"
+                                           th:value="${_csrf.token}"/>
+
+                                    <button type="submit"
+                                            class="inline-flex h-9 w-[76px] items-center justify-center rounded-xl bg-rose-600 text-sm font-semibold text-white transition hover:bg-rose-700">
                                         Eliminar
                                     </button>
                                 </form>

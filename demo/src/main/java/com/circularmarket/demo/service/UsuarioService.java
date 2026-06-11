@@ -47,7 +47,6 @@ public class UsuarioService {
 
         // La contraseña se guarda cifrada, nunca en texto plano.
         usuario.setContrasena(passwordEncoder.encode(request.getPassword()));
-
         usuario.setTelefono(request.getTelefono());
         usuario.setDireccion(request.getDireccion());
 

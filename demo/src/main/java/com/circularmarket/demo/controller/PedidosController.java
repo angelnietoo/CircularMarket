@@ -30,14 +30,17 @@ public class PedidosController {
         this.categoriaRepository = categoriaRepository;
     }
 
+    // Muestra los pedidos del usuario autenticado.
     @GetMapping("/pedidos")
     public String verPedidos(Model model, Authentication authentication) {
         Long usuarioId = obtenerUsuarioIdAutenticado(authentication);
 
+        // Si no hay usuario autenticado, se redirige al login.
         if (usuarioId == null) {
             return "redirect:/login";
         }
 
+        // Busca los pedidos del usuario ordenados desde el más reciente.
         List<Pedido> pedidos = pedidoRepository.findByCompradorIdOrderByFechaPedidoDesc(usuarioId.intValue());
 
         model.addAttribute("pedidos", pedidos);
@@ -47,6 +50,7 @@ public class PedidosController {
         return "pedidos";
     }
 
+    // Carga los datos necesarios para mostrar el header.
     private void cargarDatosHeader(Model model) {
         List<Categoria> categorias = categoriaRepository.findByActivaTrueOrderByNombreAsc();
 
@@ -55,6 +59,7 @@ public class PedidosController {
         model.addAttribute("busqueda", "");
     }
 
+    // Obtiene el ID del usuario autenticado según el tipo de login usado.
     private Long obtenerUsuarioIdAutenticado(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return null;
@@ -62,10 +67,12 @@ public class PedidosController {
 
         Object principal = authentication.getPrincipal();
 
+        // Caso de login normal con usuario propio de la aplicación.
         if (principal instanceof UsuarioAutenticado usuarioAutenticado) {
             return usuarioAutenticado.getId();
         }
 
+        // Caso de login con Google OAuth2.
         if (principal instanceof OAuth2User oauth2User) {
             Object emailObject = oauth2User.getAttribute("email");
 
@@ -80,6 +87,7 @@ public class PedidosController {
                     .orElse(null);
         }
 
+        // Caso alternativo usando el email guardado en la autenticación.
         String email = authentication.getName();
 
         if (email == null || email.isBlank()) {

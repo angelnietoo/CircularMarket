@@ -32,10 +32,12 @@ public class CarritoController {
         this.carritoService = carritoService;
     }
 
+    // Muestra el carrito del usuario autenticado.
     @GetMapping("/carrito")
     public String verCarrito(Model model, Authentication authentication) {
         Long usuarioId = obtenerUsuarioIdAutenticado(authentication);
 
+        // Si no hay usuario autenticado, se envía al login.
         if (usuarioId == null) {
             return "redirect:/login";
         }
@@ -46,12 +48,14 @@ public class CarritoController {
         return "carrito";
     }
 
+    // Añade un producto al carrito y vuelve a la página anterior.
     @PostMapping("/carrito/anadir/{id}")
     public String anadirAlCarrito(@PathVariable Long id,
                                   Authentication authentication,
                                   @RequestHeader(value = "Referer", required = false) String referer) {
         Long usuarioId = obtenerUsuarioIdAutenticado(authentication);
 
+        // Solo los usuarios autenticados pueden añadir productos.
         if (usuarioId == null) {
             return "redirect:/login";
         }
@@ -61,6 +65,7 @@ public class CarritoController {
         return redireccionSegura(referer);
     }
 
+    // Añade un producto al carrito y lleva directamente a la vista del carrito.
     @PostMapping("/comprar-ya/{id}")
     public String comprarYa(@PathVariable Long id, Authentication authentication) {
         Long usuarioId = obtenerUsuarioIdAutenticado(authentication);
@@ -74,6 +79,7 @@ public class CarritoController {
         return "redirect:/carrito";
     }
 
+    // Aumenta la cantidad de un producto del carrito.
     @PostMapping("/carrito/aumentar/{id}")
     public String aumentarCantidad(@PathVariable Long id, Authentication authentication) {
         Long usuarioId = obtenerUsuarioIdAutenticado(authentication);
@@ -87,6 +93,7 @@ public class CarritoController {
         return "redirect:/carrito";
     }
 
+    // Disminuye la cantidad de un producto del carrito.
     @PostMapping("/carrito/disminuir/{id}")
     public String disminuirCantidad(@PathVariable Long id, Authentication authentication) {
         Long usuarioId = obtenerUsuarioIdAutenticado(authentication);
@@ -100,6 +107,7 @@ public class CarritoController {
         return "redirect:/carrito";
     }
 
+    // Elimina un producto del carrito.
     @PostMapping("/carrito/eliminar/{id}")
     public String eliminarProducto(@PathVariable Long id, Authentication authentication) {
         Long usuarioId = obtenerUsuarioIdAutenticado(authentication);
@@ -113,15 +121,18 @@ public class CarritoController {
         return "redirect:/carrito";
     }
 
+    // Calcula los datos del carrito y los envía a la vista.
     private void cargarDatosCarrito(Model model, Long usuarioId) {
         List<CarritoItem> carritoItems = carritoService.obtenerItems(usuarioId);
 
         BigDecimal subtotal = BigDecimal.ZERO;
 
+        // Suma el total de todos los productos del carrito.
         for (CarritoItem item : carritoItems) {
             subtotal = subtotal.add(item.getTotal());
         }
 
+        // Solo añade gastos de envío si el carrito tiene productos.
         BigDecimal envio = carritoItems.isEmpty() ? BigDecimal.ZERO : GASTOS_ENVIO;
         BigDecimal total = subtotal.add(envio);
 
@@ -131,6 +142,7 @@ public class CarritoController {
         model.addAttribute("total", total);
     }
 
+    // Carga los datos necesarios para mostrar el header.
     private void cargarDatosHeader(Model model) {
         List<Categoria> categorias = categoriaRepository.findByActivaTrueOrderByNombreAsc();
 
@@ -139,6 +151,7 @@ public class CarritoController {
         model.addAttribute("busqueda", "");
     }
 
+    // Obtiene el ID del usuario autenticado según el tipo de login usado.
     private Long obtenerUsuarioIdAutenticado(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return null;
@@ -146,10 +159,12 @@ public class CarritoController {
 
         Object principal = authentication.getPrincipal();
 
+        // Caso de login normal con usuario propio de la aplicación.
         if (principal instanceof UsuarioAutenticado usuarioAutenticado) {
             return usuarioAutenticado.getId();
         }
 
+        // Caso de login con Google OAuth2.
         if (principal instanceof OAuth2User oauth2User) {
             Object emailObject = oauth2User.getAttribute("email");
 
@@ -164,6 +179,7 @@ public class CarritoController {
                     .orElse(null);
         }
 
+        // Caso alternativo usando el email guardado en la autenticación.
         String email = authentication.getName();
 
         if (email == null || email.isBlank()) {
@@ -175,6 +191,7 @@ public class CarritoController {
                 .orElse(null);
     }
 
+    // Redirige a la página anterior si existe, o a productos si no hay referencia.
     private String redireccionSegura(String referer) {
         if (referer == null || referer.isBlank()) {
             return "redirect:/productos";

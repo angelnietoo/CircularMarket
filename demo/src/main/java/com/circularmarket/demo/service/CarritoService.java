@@ -40,6 +40,7 @@ public class CarritoService {
             throw new IllegalArgumentException("El usuario no puede ser null");
         }
 
+        // Busca el carrito del usuario. Si no existe, crea uno nuevo.
         return carritoRepository.findByUsuarioId(usuarioId)
                 .orElseGet(() -> {
                     Usuario usuario = usuarioRepository.findById(usuarioId)
@@ -62,12 +63,14 @@ public class CarritoService {
 
         Producto producto = productoRepository.findById(productoId).orElse(null);
 
+        // Si el producto no existe o no está activo, no se añade al carrito.
         if (producto == null || Boolean.FALSE.equals(producto.getActivo())) {
             return;
         }
 
         int stock = producto.getStock() != null ? producto.getStock() : 0;
 
+        // Si no hay stock disponible, no se añade el producto.
         if (stock <= 0) {
             return;
         }
@@ -76,6 +79,7 @@ public class CarritoService {
                 .findByCarritoIdAndProductoId(carrito.getId(), producto.getId())
                 .orElse(null);
 
+        // Si el producto todavía no está en el carrito, se añade con cantidad 1.
         if (item == null) {
             item = new ItemCarrito();
             item.setCarrito(carrito);
@@ -88,6 +92,7 @@ public class CarritoService {
 
         int cantidadActual = item.getCantidad() != null ? item.getCantidad() : 1;
 
+        // Si el producto ya está en el carrito, aumenta la cantidad sin superar el stock.
         if (cantidadActual < stock) {
             item.setCantidad(cantidadActual + 1);
             itemCarritoRepository.save(item);
@@ -96,6 +101,7 @@ public class CarritoService {
 
     @Transactional
     public void aumentarCantidad(Long usuarioId, Long productoId) {
+        // Usa la misma lógica que añadir un producto al carrito.
         anadirProducto(usuarioId, productoId);
     }
 
@@ -121,11 +127,13 @@ public class CarritoService {
 
         int cantidadActual = item.getCantidad() != null ? item.getCantidad() : 1;
 
+        // Si solo queda una unidad, se elimina el producto del carrito.
         if (cantidadActual <= 1) {
             itemCarritoRepository.delete(item);
             return;
         }
 
+        // Si hay más de una unidad, solo se baja la cantidad en 1.
         item.setCantidad(cantidadActual - 1);
         itemCarritoRepository.save(item);
     }
@@ -142,6 +150,7 @@ public class CarritoService {
             return;
         }
 
+        // Elimina directamente el producto del carrito si existe.
         itemCarritoRepository
                 .findByCarritoIdAndProductoId(carrito.getId(), productoId)
                 .ifPresent(itemCarritoRepository::delete);
@@ -159,6 +168,7 @@ public class CarritoService {
             return;
         }
 
+        // Borra todos los productos del carrito.
         itemCarritoRepository.deleteByCarritoId(carrito.getId());
     }
 
@@ -180,6 +190,7 @@ public class CarritoService {
         for (ItemCarrito itemBD : itemsBD) {
             Producto producto = itemBD.getProducto();
 
+            // No muestra productos eliminados, desactivados o sin precio.
             if (producto == null || Boolean.FALSE.equals(producto.getActivo())) {
                 continue;
             }
@@ -188,10 +199,12 @@ public class CarritoService {
                 continue;
             }
 
+            // Si el producto tiene imagen, se crea la ruta para mostrarla en la web.
             String imagenUrl = producto.getImagen() != null && producto.getImagen().length > 0
                     ? "/productos/" + producto.getId() + "/imagen"
                     : null;
 
+            // Convierte el item de la base de datos en un objeto más cómodo para la vista.
             CarritoItem item = new CarritoItem(
                     producto.getId(),
                     producto.getTitulo(),
@@ -214,6 +227,7 @@ public class CarritoService {
 
         int total = 0;
 
+        // Suma todas las cantidades para saber cuántos productos hay en el carrito.
         for (CarritoItem item : items) {
             total += item.getCantidad() != null ? item.getCantidad() : 0;
         }
@@ -227,6 +241,7 @@ public class CarritoService {
 
         BigDecimal subtotal = BigDecimal.ZERO;
 
+        // Suma el precio total de todos los productos del carrito.
         for (CarritoItem item : items) {
             subtotal = subtotal.add(item.getTotal());
         }

@@ -31,6 +31,7 @@ public class AdminUsuarioController {
         this.rolUsuarioRepository = rolUsuarioRepository;
     }
 
+    // Muestra el listado de usuarios con búsqueda y paginación.
     @GetMapping
     public String listarUsuarios(
             @RequestParam(name = "q", required = false) String q,
@@ -41,9 +42,11 @@ public class AdminUsuarioController {
 
         Page<Usuario> paginaUsuarios;
 
+        // Si no hay búsqueda, muestra todos los usuarios paginados.
         if (busqueda.isBlank()) {
             paginaUsuarios = usuarioRepository.findAll(pageable);
         } else {
+            // Si hay búsqueda, filtra los usuarios por el texto introducido.
             paginaUsuarios = usuarioRepository.buscarUsuarios(busqueda, pageable);
         }
 
@@ -54,28 +57,51 @@ public class AdminUsuarioController {
         return "admin/usuarios-lista";
     }
 
-    @GetMapping("/nuevo")
-    public String nuevoUsuario(Model model) {
-        model.addAttribute("usuario", new Usuario());
-        model.addAttribute("roles", rolUsuarioRepository.findAll());
-
-        return "admin/usuarios-formulario";
-    }
-
-    @GetMapping("/{id}/editar")
-    public String editarUsuario(@PathVariable Long id, Model model) {
+    // Muestra el detalle de un usuario concreto.
+    @GetMapping("/{id}/ver")
+    public String verUsuario(@PathVariable Long id, Model model) {
         Usuario usuario = usuarioService.buscarPorId(id);
 
+        // Si el usuario no existe, vuelve al listado.
         if (usuario == null) {
             return "redirect:/admin/usuarios";
         }
 
         model.addAttribute("usuario", usuario);
+
+        return "admin/usuarios-detalle";
+    }
+
+    // Abre el formulario para crear un nuevo usuario.
+    @GetMapping("/nuevo")
+    public String nuevoUsuario(Model model) {
+        model.addAttribute("usuario", new Usuario());
+
+        // Carga los roles disponibles para mostrarlos en el formulario.
         model.addAttribute("roles", rolUsuarioRepository.findAll());
 
         return "admin/usuarios-formulario";
     }
 
+    // Abre el formulario para editar un usuario existente.
+    @GetMapping("/{id}/editar")
+    public String editarUsuario(@PathVariable Long id, Model model) {
+        Usuario usuario = usuarioService.buscarPorId(id);
+
+        // Si el usuario no existe, vuelve al listado.
+        if (usuario == null) {
+            return "redirect:/admin/usuarios";
+        }
+
+        model.addAttribute("usuario", usuario);
+
+        // Carga los roles para poder cambiar el rol del usuario.
+        model.addAttribute("roles", rolUsuarioRepository.findAll());
+
+        return "admin/usuarios-formulario";
+    }
+
+    // Guarda un usuario nuevo o actualiza uno existente desde el panel admin.
     @PostMapping
     public String guardarUsuario(@ModelAttribute("usuario") Usuario usuario,
                                  Model model) {
@@ -83,12 +109,14 @@ public class AdminUsuarioController {
             usuarioService.guardarUsuarioAdmin(usuario);
             return "redirect:/admin/usuarios";
         } catch (IllegalArgumentException e) {
+            // Si hay algún error de validación, vuelve al formulario con el mensaje.
             model.addAttribute("error", e.getMessage());
             model.addAttribute("roles", rolUsuarioRepository.findAll());
             return "admin/usuarios-formulario";
         }
     }
 
+    // Elimina un usuario desde el panel de administración.
     @PostMapping("/{id}/eliminar")
     public String eliminarUsuario(@PathVariable Long id,
                                   @RequestParam(defaultValue = "0") int page,
@@ -98,10 +126,12 @@ public class AdminUsuarioController {
 
         String busqueda = q != null ? q.trim() : "";
 
+        // Mantiene la página actual al volver al listado.
         if (busqueda.isBlank()) {
             return "redirect:/admin/usuarios?page=" + page;
         }
 
+        // Mantiene también el filtro de búsqueda si estaba activo.
         String qCodificada = URLEncoder.encode(busqueda, StandardCharsets.UTF_8);
 
         return "redirect:/admin/usuarios?page=" + page + "&q=" + qCodificada;

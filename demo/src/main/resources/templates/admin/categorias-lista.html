@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Categorías | CircularMarket</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-slate-50 text-slate-950">
 
 <div class="min-h-screen lg:flex">
     <div th:replace="~{fragments/sidebar-admin :: sidebar}"></div>
 
-    <main class="flex-1 p-6 lg:p-8">
-        <header class="mb-6 flex flex-col gap-4 rounded-[20px] border border-slate-200 bg-white p-6 shadow-lg sm:flex-row sm:items-center sm:justify-between">
+    <main class="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
+        <header class="mb-6 flex flex-col gap-4 rounded-[20px] border border-slate-200 bg-white p-5 shadow-lg sm:flex-row sm:items-center sm:justify-between sm:p-6">
             <div>
                 <h2 class="text-2xl font-bold tracking-tight text-slate-900">Categorías</h2>
                 <p class="mt-1 text-sm text-slate-500">Gestiona las categorías del catálogo</p>
@@ -26,7 +27,39 @@
 
         <section class="overflow-hidden rounded-[20px] border border-slate-200 bg-white shadow-lg">
             <div class="border-b border-slate-200 bg-slate-50 px-5 py-4">
-                <h3 class="text-lg font-semibold text-slate-900">Listado de categorías</h3>
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-slate-900">
+                            Listado de categorías
+                        </h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            Filtra por nombre, descripción, ID o estado.
+                        </p>
+                    </div>
+
+                    <form class="flex w-full flex-col gap-2 sm:flex-row lg:max-w-xl"
+                          th:action="@{/admin/categorias}"
+                          method="get">
+
+                        <input type="text"
+                               name="q"
+                               placeholder="Buscar por nombre, descripción o estado"
+                               th:value="${q}"
+                               class="min-w-0 flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"/>
+
+                        <button type="submit"
+                                class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
+                            Buscar
+                        </button>
+
+                        <a th:if="${q != null and !q.isBlank()}"
+                           th:href="@{/admin/categorias}"
+                           class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
+                            Limpiar
+                        </a>
+                    </form>
+                </div>
             </div>
 
             <div th:if="${error}"
@@ -42,19 +75,19 @@
                         <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700 align-middle">Nombre</th>
                         <th class="px-5 py-2 text-left text-sm font-semibold text-slate-700 align-middle">Descripción</th>
                         <th class="w-32 px-5 py-2 text-left text-sm font-semibold text-slate-700 align-middle">Activa</th>
-                        <th class="w-56 px-5 py-2 text-center text-sm font-semibold text-slate-700 align-middle">Acciones</th>
+                        <th class="w-64 px-5 py-2 text-center text-sm font-semibold text-slate-700 align-middle">Acciones</th>
                     </tr>
                     </thead>
 
                     <tbody class="divide-y divide-slate-200 bg-white">
                     <tr th:if="${categorias == null or #lists.isEmpty(categorias)}">
                         <td colspan="5" class="px-5 py-6 text-center text-sm text-slate-500">
-                            No hay categorías registradas.
+                            No hay categorías que coincidan con la búsqueda.
                         </td>
                     </tr>
 
                     <tr th:each="categoria : ${categorias}" class="hover:bg-slate-50">
-                        <td class="px-5 py-2 text-sm font-medium text-slate-900 align-middle whitespace-nowrap"
+                        <td class="whitespace-nowrap px-5 py-2 text-sm font-medium text-slate-900 align-middle"
                             th:text="${categoria.id}">
                             1
                         </td>
@@ -65,11 +98,11 @@
                         </td>
 
                         <td class="px-5 py-2 text-sm text-slate-700 align-middle"
-                            th:text="${categoria.descripcion}">
+                            th:text="${categoria.descripcion != null and !categoria.descripcion.isBlank() ? categoria.descripcion : '-'}">
                             Descripción
                         </td>
 
-                        <td class="px-5 py-2 text-sm text-slate-700 align-middle whitespace-nowrap">
+                        <td class="whitespace-nowrap px-5 py-2 text-sm text-slate-700 align-middle">
                             <span th:if="${categoria.activa}"
                                   class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
                                 Activa
@@ -83,19 +116,24 @@
 
                         <td class="px-5 py-2 align-middle">
                             <div class="flex flex-wrap justify-center gap-2">
+                                <a th:href="@{/admin/categorias/{id}/ver(id=${categoria.id})}"
+                                   class="inline-flex items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100">
+                                    Ver
+                                </a>
+
                                 <a th:href="@{/admin/categorias/{id}/editar(id=${categoria.id})}"
                                    class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
                                     Editar
                                 </a>
 
-                                <form th:action="@{/admin/categorias/{id}/eliminar(id=${categoria.id}, page=${paginaCategorias != null ? paginaCategorias.number : 0})}"
+                                <form th:action="@{/admin/categorias/{id}/eliminar(id=${categoria.id}, page=${paginaCategorias != null ? paginaCategorias.number : 0}, q=${q})}"
                                       method="post"
                                       onsubmit="return confirm('¿Seguro que quieres eliminar esta categoría?');">
 
                                     <input type="hidden"
                                            th:if="${_csrf != null}"
                                            th:name="${_csrf.parameterName}"
-                                           th:value="${_csrf.token}" />
+                                           th:value="${_csrf.token}"/>
 
                                     <button type="submit"
                                             class="inline-flex items-center justify-center rounded-xl bg-rose-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-rose-700">
@@ -111,12 +149,30 @@
 
             <div class="p-5 text-center text-slate-600"
                  th:if="${categorias == null or #lists.isEmpty(categorias)}">
-                <p class="mb-4">No hay categorías registradas.</p>
 
-                <a th:href="@{/admin/categorias/nueva}"
-                   class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700">
-                    Crear primera categoría
-                </a>
+                <p class="mb-4"
+                   th:if="${q == null or q.isBlank()}">
+                    No hay categorías registradas.
+                </p>
+
+                <p class="mb-4"
+                   th:if="${q != null and !q.isBlank()}">
+                    No hay categorías que coincidan con la búsqueda:
+                    <span class="font-semibold text-slate-900" th:text="${q}">búsqueda</span>
+                </p>
+
+                <div class="flex flex-col items-center justify-center gap-3 sm:flex-row">
+                    <a th:href="@{/admin/categorias/nueva}"
+                       class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700">
+                        Crear categoría
+                    </a>
+
+                    <a th:if="${q != null and !q.isBlank()}"
+                       th:href="@{/admin/categorias}"
+                       class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
+                        Limpiar búsqueda
+                    </a>
+                </div>
             </div>
 
             <div class="flex flex-col gap-4 border-t border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
@@ -131,7 +187,7 @@
 
                 <div class="flex flex-wrap items-center gap-2">
                     <a th:if="${paginaCategorias.hasPrevious()}"
-                       th:href="@{/admin/categorias(page=${paginaCategorias.number - 1})}"
+                       th:href="@{/admin/categorias(page=${paginaCategorias.number - 1}, q=${q})}"
                        class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">
                         Anterior
                     </a>
@@ -142,7 +198,7 @@
                     </span>
 
                     <a th:each="i : ${#numbers.sequence(0, paginaCategorias.totalPages - 1)}"
-                       th:href="@{/admin/categorias(page=${i})}"
+                       th:href="@{/admin/categorias(page=${i}, q=${q})}"
                        th:text="${i + 1}"
                        th:classappend="${i == paginaCategorias.number} ? ' bg-blue-600 text-white border-blue-600' : ' bg-white text-slate-700 border-slate-200 hover:bg-slate-100'"
                        class="rounded-xl border px-3 py-2 text-sm font-semibold">
@@ -150,7 +206,7 @@
                     </a>
 
                     <a th:if="${paginaCategorias.hasNext()}"
-                       th:href="@{/admin/categorias(page=${paginaCategorias.number + 1})}"
+                       th:href="@{/admin/categorias(page=${paginaCategorias.number + 1}, q=${q})}"
                        class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">
                         Siguiente
                     </a>

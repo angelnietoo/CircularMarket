@@ -21,24 +21,29 @@ public class ConfigController {
         this.usuarioService = usuarioService;
     }
 
+    // Muestra la pantalla de configuración del usuario autenticado.
     @GetMapping("/configuracion")
     public String configuracion(Model model, Authentication authentication) {
+        // Si no hay sesión iniciada, redirige al login.
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";
         }
 
+        // Obtiene el email según el tipo de login usado.
         String email = obtenerEmailAutenticado(authentication);
 
         if (email == null || email.isBlank()) {
             return "redirect:/login";
         }
 
+        // Busca el usuario usando el email autenticado.
         Usuario usuarioAutenticado = usuarioService.buscarPorEmail(email);
 
         if (usuarioAutenticado == null) {
             return "redirect:/login";
         }
 
+        // Recarga el usuario por ID para obtener sus datos actualizados.
         Usuario usuario = usuarioService.buscarPorId(usuarioAutenticado.getId());
 
         if (usuario == null) {
@@ -49,6 +54,7 @@ public class ConfigController {
         return "config";
     }
 
+    // Guarda los cambios de configuración del usuario.
     @PostMapping("/configuracion")
     public String guardarConfiguracion(
             Usuario usuarioForm,
@@ -58,16 +64,19 @@ public class ConfigController {
             RedirectAttributes redirectAttributes,
             Model model) {
 
+        // Comprueba que el usuario siga autenticado antes de guardar cambios.
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";
         }
 
+        // Obtiene el email actual de la sesión.
         String emailActual = obtenerEmailAutenticado(authentication);
 
         if (emailActual == null || emailActual.isBlank()) {
             return "redirect:/login";
         }
 
+        // Busca el usuario real que está modificando sus datos.
         Usuario usuarioAutenticado = usuarioService.buscarPorEmail(emailActual);
 
         if (usuarioAutenticado == null) {
@@ -75,6 +84,7 @@ public class ConfigController {
         }
 
         try {
+            // Actualiza los datos del usuario.
             usuarioService.actualizarUsuario(
                     usuarioAutenticado.getId(),
                     usuarioForm,
@@ -82,23 +92,28 @@ public class ConfigController {
                     repetirPassword
             );
 
+            // Muestra mensaje de éxito tras redirigir.
             redirectAttributes.addFlashAttribute("success", true);
             return "redirect:/configuracion";
 
         } catch (IllegalArgumentException e) {
+            // Si hay errores de validación, vuelve al formulario con el mensaje.
             model.addAttribute("error", e.getMessage());
             model.addAttribute("usuario", usuarioForm);
             return "config";
         }
     }
 
+    // Obtiene el email del usuario según el tipo de autenticación.
     private String obtenerEmailAutenticado(Authentication authentication) {
         Object principal = authentication.getPrincipal();
 
+        // Caso de login normal con usuario propio de la aplicación.
         if (principal instanceof UsuarioAutenticado usuarioAutenticado) {
             return usuarioAutenticado.getUsername();
         }
 
+        // Caso de login con Google OAuth2.
         if (principal instanceof OAuth2User oauth2User) {
             Object email = oauth2User.getAttributes().get("email");
 
@@ -107,6 +122,7 @@ public class ConfigController {
             }
         }
 
+        // Caso alternativo usando el nombre de la autenticación.
         String name = authentication.getName();
 
         if (name != null && name.contains("@")) {

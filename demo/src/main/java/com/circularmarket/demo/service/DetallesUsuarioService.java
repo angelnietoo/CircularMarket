@@ -21,6 +21,7 @@ public class DetallesUsuarioService implements UserDetailsService {
         this.usuarioRepository = usuarioRepository;
     }
 
+    // Carga un usuario por su email en el login.
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 

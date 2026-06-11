@@ -44,6 +44,12 @@
                 </div>
             </div>
 
+            <div class="space-y-3" th:if="${param.passwordReset}">
+                <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+                    Contraseña restablecida correctamente. Ya puedes iniciar sesión.
+                </div>
+            </div>
+
             <form th:action="@{/login}" method="post" class="space-y-4">
                 <div class="space-y-2">
                     <label for="email" class="block text-sm font-semibold text-slate-700">Email</label>
@@ -66,7 +72,7 @@
                 </div>
 
                 <div class="text-right text-sm">
-                    <a th:href="@{/forgot-password}" class="font-semibold text-blue-800 hover:underline">
+                    <a th:href="@{/recuperar-contrasena}" class="font-semibold text-blue-800 hover:underline">
                         He olvidado mi contraseña
                     </a>
                 </div>

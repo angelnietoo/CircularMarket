@@ -50,6 +50,7 @@ public class DashboardService {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No existe el pedido con ID: " + id));
 
+        // Si existe se marca como entregado
         pedido.setEstado(EstadoPedido.entregado);
     }
 
@@ -59,6 +60,7 @@ public class DashboardService {
             return;
         }
 
+        // Si existe se elimina
         pedidoRepository.deleteById(id);
     }
 }

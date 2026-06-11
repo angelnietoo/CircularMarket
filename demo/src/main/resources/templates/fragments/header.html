@@ -2,15 +2,16 @@
         xmlns:th="http://www.thymeleaf.org"
         xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-    <div class="sticky top-0 z-[1000] relative flex w-full h-[60px] items-center gap-4
+    <div class="sticky top-0 z-[1000] relative flex w-full min-h-[60px] items-center gap-3
                 bg-[rgba(239,246,255,0.92)] backdrop-blur-md text-gray-800
-                px-7 py-0 border-b border-gray-300
+                px-3 py-2 border-b border-gray-300
                 shadow-[0_2px_10px_rgba(31,41,55,0.04)]
-                flex-nowrap sm:px-3.5">
+                flex-wrap xl:h-[60px] xl:flex-nowrap xl:px-7 xl:py-0 xl:gap-4">
 
+        <!-- Botón categorías / menú hamburguesa -->
         <button type="button"
                 onclick="toggleCategoriasMenu()"
-                class="relative z-[1700] inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-300 bg-white text-gray-800 shadow-sm transition hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
+                class="relative z-[1700] order-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-300 bg-white text-gray-800 shadow-sm transition hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
                 aria-label="Abrir menú de categorías"
                 aria-controls="headerCategoriasMenu"
                 aria-expanded="false">
@@ -19,16 +20,22 @@
             </svg>
         </button>
 
+        <!-- Logo -->
         <a th:href="@{/inicio}"
-           class="relative z-[1700] shrink-0 text-xl font-extrabold tracking-tight whitespace-nowrap leading-none sm:text-lg no-underline">
+           class="relative z-[1700] order-2 shrink-0 text-lg font-extrabold tracking-tight whitespace-nowrap leading-none no-underline sm:text-xl">
             <span class="text-gray-800">Circular</span><span class="text-blue-600">Market</span>
         </a>
 
-        <form class="absolute left-1/2 top-1/2 z-[1600] w-full max-w-[520px] min-w-0 -translate-x-1/2 -translate-y-1/2"
+        <!-- Buscador responsive -->
+        <form class="relative z-[1600] order-4 w-full min-w-0
+                     xl:absolute xl:left-1/2 xl:top-1/2 xl:order-3 xl:w-[480px] xl:-translate-x-1/2 xl:-translate-y-1/2
+                     2xl:w-[520px]
+                     min-[1800px]:w-[600px]"
               th:action="@{/productos}"
               method="get">
+
             <div class="relative w-full">
-                <div class="flex w-full max-w-[520px] min-w-0 h-9 border border-gray-300 rounded-lg overflow-hidden bg-white box-border transition-colors duration-200 ease-in-out focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100/25 sm:h-[36px] sm:rounded-lg">
+                <div class="flex w-full min-w-0 h-9 border border-gray-300 rounded-lg overflow-hidden bg-white box-border transition-colors duration-200 ease-in-out focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100/25">
                     <input type="text"
                            id="buscadorHeader"
                            name="q"
@@ -37,13 +44,13 @@
                            maxlength="60"
                            pattern="[A-Za-zÁÉÍÓÚáéíóúÑñÜü0-9 .,\-]+"
                            autocomplete="off"
-                           class="flex-1 border-0 outline-none bg-transparent text-gray-800 text-sm h-full px-3.5 min-w-0 box-border placeholder-gray-400 focus:shadow-none sm:text-sm sm:px-3">
+                           class="flex-1 border-0 outline-none bg-transparent text-gray-800 text-sm h-full px-3.5 min-w-0 box-border placeholder-gray-400 focus:shadow-none">
 
                     <button type="submit"
-                            class="w-[46px] min-w-[46px] h-full border-0 bg-blue-600 text-white cursor-pointer inline-flex items-center justify-center transition-colors duration-200 ease-in-out hover:bg-blue-700 sm:w-[42px] sm:min-w-[42px]"
+                            class="w-[46px] min-w-[46px] h-full border-0 bg-blue-600 text-white cursor-pointer inline-flex items-center justify-center transition-colors duration-200 ease-in-out hover:bg-blue-700"
                             aria-label="Buscar productos"
                             title="Buscar productos">
-                        <svg viewBox="0 0 24 24" aria-hidden="true" class="w-4.5 h-4.5 block fill-current sm:w-4 sm:h-4">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" class="w-4 h-4 block fill-current">
                             <path d="M10 4a6 6 0 104.472 10.028l4.75 4.75 1.414-1.414-4.75-4.75A6 6 0 0010 4zm0 2a4 4 0 110 8 4 4 0 010-8z"/>
                         </svg>
                     </button>
@@ -55,19 +62,21 @@
             </div>
         </form>
 
-        <div class="relative z-[1700] shrink-0 ml-auto flex items-center gap-3.5 sm:gap-2.5">
+        <!-- Botones derecha -->
+        <div class="relative z-[1700] order-3 ml-auto flex min-w-0 shrink-0 items-center gap-2 sm:gap-2.5 xl:order-4 xl:gap-3">
+
             <a th:href="@{/productos}"
-               class="text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600">
+               class="hidden whitespace-nowrap text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600 md:inline">
                 Productos
             </a>
 
             <a th:href="@{/pedidos}"
-               class="text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600">
+               class="hidden whitespace-nowrap text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600 md:inline">
                 Pedidos
             </a>
 
             <a th:href="@{/carrito}"
-               class="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-300 bg-white text-gray-800 shadow-sm transition hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
+               class="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-300 bg-white text-gray-800 shadow-sm transition hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
                aria-label="Ir al carrito"
                title="Carrito">
 
@@ -86,32 +95,49 @@
 
             <a th:href="@{/admin}"
                sec:authorize="hasAuthority('ROLE_ADMIN')"
-               class="text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600">
+               class="hidden whitespace-nowrap text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600 min-[1800px]:inline">
                 Panel de administrador
+            </a>
+
+            <a th:href="@{/admin}"
+               sec:authorize="hasAuthority('ROLE_ADMIN')"
+               class="hidden whitespace-nowrap text-gray-800 no-underline font-semibold text-sm leading-none transition-colors duration-200 ease-in-out hover:text-blue-600 xl:inline min-[1800px]:hidden">
+                Admin
             </a>
 
             <div class="relative flex-shrink-0 flex items-center" sec:authorize="isAuthenticated()">
                 <button type="button"
-                        class="border border-gray-300 bg-white text-gray-800 p-1.5 px-3 rounded-xl cursor-pointer font-bold text-sm min-h-[38px] inline-flex items-center justify-center transition-all duration-200 ease-in-out hover:border-blue-400/50 hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-md box-border text-left leading-tight no-underline sm:min-h-[36px] sm:text-sm sm:p-1.5 sm:px-2.5"
+                        class="border border-gray-300 bg-white text-gray-800 p-1.5 px-2.5 rounded-xl cursor-pointer font-bold text-sm min-h-[38px] inline-flex items-center justify-center transition-all duration-200 ease-in-out hover:border-blue-400/50 hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-md box-border text-left leading-tight no-underline sm:px-3"
                         onclick="toggleCuentaMenu()"
                         aria-haspopup="true"
                         aria-controls="headerCuentaMenu"
                         aria-expanded="false">
-                    <span class="flex flex-col items-start gap-[3px] whitespace-nowrap">
-                        <span class="text-xs font-semibold text-gray-500 leading-none sm:text-xs">
+
+                    <span class="hidden flex-col items-start gap-[3px] whitespace-nowrap lg:flex">
+                        <span class="text-xs font-semibold text-gray-500 leading-none">
                             Bienvenido,
                             <span th:text="${@usuarioSesion.obtenerNombre(#authentication)}">Usuario</span>
                         </span>
-                        <span class="text-sm font-extrabold text-gray-800 leading-none sm:text-sm">Cuenta ▾</span>
+                        <span class="text-sm font-extrabold text-gray-800 leading-none">Cuenta ▾</span>
+                    </span>
+
+                    <span class="text-sm font-extrabold text-gray-800 leading-none lg:hidden">
+                        Cuenta ▾
                     </span>
                 </button>
 
                 <div id="headerCuentaMenu"
-                     class="absolute top-full right-0 min-w-52 bg-white border border-gray-300 rounded-2xl shadow-xl p-2 hidden z-[1800] sm:right-0 sm:left-auto">
+                     class="absolute top-full right-0 min-w-52 bg-white border border-gray-300 rounded-2xl shadow-xl p-2 hidden z-[1800]">
 
                     <a th:href="@{/configuracion}"
                        class="block p-2.5 px-3 rounded-xl text-gray-800 no-underline font-semibold text-sm transition-colors duration-200 ease-in-out hover:bg-blue-50 hover:text-blue-800">
                         Configuración
+                    </a>
+
+                    <a th:href="@{/admin}"
+                       sec:authorize="hasAuthority('ROLE_ADMIN')"
+                       class="block rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-800 no-underline transition-colors duration-200 ease-in-out hover:bg-blue-50 hover:text-blue-800 xl:hidden">
+                        Panel de administrador
                     </a>
 
                     <form th:action="@{/logout}" method="post" style="margin:0;">
@@ -138,10 +164,10 @@
         <div class="flex h-[60px] items-center justify-between border-b border-slate-200 bg-slate-50 px-4">
             <div>
                 <p class="text-base font-extrabold text-slate-900">
-                    Categorías
+                    Menú
                 </p>
                 <p class="text-xs text-slate-500">
-                    Filtra productos
+                    Navegación y categorías
                 </p>
             </div>
 
@@ -155,19 +181,48 @@
 
         <nav class="h-[calc(100vh-60px)] overflow-y-auto p-2">
 
-            <a th:href="@{/productos}"
-               th:classappend="${categoriaSeleccionadaId == null} ? 'bg-blue-600 text-white hover:bg-blue-600 hover:text-white' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700'"
-               class="block rounded-lg px-3 py-2 text-sm font-bold transition">
-                Todas las categorías
-            </a>
+            <!-- Navegación principal en pantallas pequeñas -->
+            <div class="mb-3 border-b border-slate-200 pb-3 md:hidden">
+                <p class="px-3 pb-2 text-xs font-extrabold uppercase tracking-[0.18em] text-slate-400">
+                    Navegación
+                </p>
 
-            <a th:each="categoria : ${categoriasHeader}"
-               th:href="@{/productos(categoriaId=${categoria.id})}"
-               th:text="${categoria.nombre}"
-               th:classappend="${categoriaSeleccionadaId != null and categoria.id == categoriaSeleccionadaId} ? 'bg-blue-600 text-white hover:bg-blue-600 hover:text-white' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700'"
-               class="block rounded-lg px-3 py-2 text-sm font-bold transition">
-                Categoría
-            </a>
+                <a th:href="@{/productos}"
+                   class="block rounded-lg px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700">
+                    Productos
+                </a>
+
+                <a th:href="@{/pedidos}"
+                   class="block rounded-lg px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700">
+                    Pedidos
+                </a>
+
+                <a th:href="@{/carrito}"
+                   class="block rounded-lg px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700">
+                    Carrito
+                </a>
+            </div>
+
+            <!-- Categorías -->
+            <div>
+                <p class="px-3 pb-2 text-xs font-extrabold uppercase tracking-[0.18em] text-slate-400">
+                    Categorías
+                </p>
+
+                <a th:href="@{/productos}"
+                   th:classappend="${categoriaSeleccionadaId == null} ? 'bg-blue-600 text-white hover:bg-blue-600 hover:text-white' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700'"
+                   class="block rounded-lg px-3 py-2 text-sm font-bold transition">
+                    Todas las categorías
+                </a>
+
+                <a th:each="categoria : ${categoriasHeader}"
+                   th:href="@{/productos(categoriaId=${categoria.id})}"
+                   th:text="${categoria.nombre}"
+                   th:classappend="${categoriaSeleccionadaId != null and categoria.id == categoriaSeleccionadaId} ? 'bg-blue-600 text-white hover:bg-blue-600 hover:text-white' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700'"
+                   class="block rounded-lg px-3 py-2 text-sm font-bold transition">
+                    Categoría
+                </a>
+            </div>
 
         </nav>
 
