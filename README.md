@@ -126,7 +126,7 @@ La interfaz de CircularMarket usa un diseño claro, con fondos suaves, tarjetas 
 ### Paleta de colores
 
 <p align="center">
-  <img src="docs/img/paleta-colores.png" alt="Paleta de colores de CircularMarket" width="900">
+  <img src="docs/img/PaletaDeColores.png" alt="Paleta de colores de CircularMarket" width="900">
 </p>
 
 ### Tipografía
@@ -134,7 +134,7 @@ La interfaz de CircularMarket usa un diseño claro, con fondos suaves, tarjetas 
 La web usa una tipografía sans-serif mediante TailwindCSS, principalmente con la clase `font-sans`.
 
 <p align="center">
-  <img src="docs/img/tipografia.png" alt="Guía tipográfica de CircularMarket" width="900">
+  <img src="docs/img/Tipografia.png" alt="Guía tipográfica de CircularMarket" width="900">
 </p>
 
 ---
