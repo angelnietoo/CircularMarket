@@ -22,6 +22,7 @@ public class UsuarioViewAdvice {
         this.usuarioRepository = usuarioRepository;
     }
 
+    // Añade el nombre del usuario a todas las vistas.
     @ModelAttribute("usuarioNombre")
     public String usuarioNombre(Authentication authentication) {
         if (authentication == null
@@ -36,6 +37,7 @@ public class UsuarioViewAdvice {
             return "Invitado";
         }
 
+        // Usuario iniciado con login normal.
         if (principal instanceof UsuarioAutenticado usuario) {
             String nombre = usuario.getNombre();
 
@@ -54,6 +56,7 @@ public class UsuarioViewAdvice {
             }
         }
 
+        // Usuario iniciado con Google.
         if (principal instanceof OAuth2User oauth2User) {
             Object emailObject = oauth2User.getAttribute("email");
 
@@ -77,6 +80,7 @@ public class UsuarioViewAdvice {
         return authentication.getName();
     }
 
+    // Añade la cantidad del carrito a todas las vistas.
     @ModelAttribute("carritoCantidad")
     public int carritoCantidad(Authentication authentication) {
         Long usuarioId = obtenerUsuarioIdAutenticado(authentication);
@@ -88,6 +92,7 @@ public class UsuarioViewAdvice {
         return carritoService.contarItems(usuarioId);
     }
 
+    // Obtiene el ID del usuario conectado.
     private Long obtenerUsuarioIdAutenticado(Authentication authentication) {
         if (authentication == null
                 || !authentication.isAuthenticated()
@@ -97,10 +102,12 @@ public class UsuarioViewAdvice {
 
         Object principal = authentication.getPrincipal();
 
+        // Caso login normal.
         if (principal instanceof UsuarioAutenticado usuarioAutenticado) {
             return usuarioAutenticado.getId();
         }
 
+        // Caso login con Google.
         if (principal instanceof OAuth2User oauth2User) {
             Object emailObject = oauth2User.getAttribute("email");
 
