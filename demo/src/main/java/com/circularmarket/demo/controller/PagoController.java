@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -61,7 +62,8 @@ public class PagoController {
 
     // Crea una sesión de pago en Stripe con los productos del carrito.
     @PostMapping("/stripe")
-    public String pagarConStripe(Authentication authentication) throws StripeException {
+    public String pagarConStripe(Authentication authentication,
+                                  RedirectAttributes redirectAttributes) throws StripeException {
         Long usuarioId = obtenerUsuarioIdAutenticado(authentication);
 
         // Si no hay usuario autenticado, se redirige al login.
@@ -74,6 +76,16 @@ public class PagoController {
         // Si el carrito está vacío, no se inicia el pago.
         if (carritoItems == null || carritoItems.isEmpty()) {
             return "redirect:/carrito";
+        }
+
+        // Antes de mandar al usuario a Stripe, se comprueba que tenga dirección guardada.
+        if (!usuarioTieneDireccion(usuarioId)) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "Antes de tramitar el pedido tienes que añadir una dirección de envío."
+            );
+
+            return "redirect:/configuracion";
         }
 
         // Configura la clave privada de Stripe.
@@ -273,6 +285,19 @@ public class PagoController {
         pago.setPagadoEn(LocalDateTime.now());
 
         pagoRepository.save(pago);
+    }
+
+    // Comprueba si el usuario tiene una dirección de envío guardada.
+    private boolean usuarioTieneDireccion(Long usuarioId) {
+        if (usuarioId == null) {
+            return false;
+        }
+
+        return usuarioRepository.findById(usuarioId)
+                .map(Usuario::getDireccion)
+                .map(String::trim)
+                .filter(direccion -> !direccion.isBlank())
+                .isPresent();
     }
 
     // Obtiene el ID del usuario autenticado según el tipo de login usado.
